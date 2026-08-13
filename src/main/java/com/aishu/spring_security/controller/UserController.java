@@ -37,6 +37,8 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
+    UserRepo userRepo;
+    @Autowired
     NotificationService notificationService;
 
     @Autowired
@@ -48,8 +50,6 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    UserRepo userRepo;
     @Autowired
     JwtStoreService jwtStoreService;
 

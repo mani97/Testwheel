@@ -219,16 +219,54 @@
                                 </div>
                                 <div
                                     class="d-flex justify-content-between align-items-center project-info custom-border p-b-8">
-                                    <div class="d-flex align-items-center gap-1">
-                                        <img loading="lazy" src="assets/images/test-cases.svg" alt="Test Cases"
-                                            class="me-1">
-                                        <span class="head-h4 dmsans-regular text-color1">20</span> <span
-                                            class="para-f4 dmsans-regular text-color1">Test Cases</span>
-                                    </div>
+                                        <div class="d-flex align-items-center gap-1">
+                                            <img loading="lazy" src="assets/images/test-cases.svg" alt="Test Cases"
+                                                class="me-1">
+                                            <span id="testCount" class="head-h4 dmsans-regular text-color1" th:text="${testCount}"></span>
+                                            <span class="para-f4 dmsans-regular text-color1">Test Cases</span>
+                                        </div>
+
+                                    <script>
+                                        function refreshTestCount() {
+                                            fetch('/testrequest/count')
+                                                .then(response => response.json())
+                                                .then(count => {
+                                                    document.getElementById("testCount").textContent = tests.count;
+                                                    document.getElementById("userCount").textContent = users.count;
+                                                })
+                                                .catch(error => console.error("Error fetching count:", error));
+                                        }
+                                        // Intercept form submit
+                                            document.getElementById("testForm").addEventListener("submit", function(e) {
+                                         e.preventDefault(); // stop normal form submit
+
+                                            const formData = new FormData(this);
+
+    fetch(this.action, {
+        method: this.method,
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            refreshTestCount(); // update count immediately
+        }
+    })
+    .catch(error => console.error("Error saving test:", error));
+});
+
+
+
+                                        // Initial load
+                                        refreshTestCount();
+
+                                    </script>
+
+
+
                                     <div class="d-flex align-items-center gap-1">
                                         <img loading="lazy" src="assets/images/user-list-icon.svg" alt="Users"
                                             class="me-1">
-                                        <span class="head-h4 dmsans-regular text-color1">2</span> <span
+                                        <span class="head-h4 dmsans-regular text-color1" th:text="${userCount}"></span> <span
                                             class="para-f4 dmsans-regular text-color1">Users</span>
                                     </div>
                                 </div>

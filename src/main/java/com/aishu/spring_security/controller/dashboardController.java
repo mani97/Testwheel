@@ -19,13 +19,7 @@ import java.util.Map;
 @Controller
 public class dashboardController {
 
-    @GetMapping({"/", "/dashboar"})
-    public String viewHomePage(Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            model.addAttribute("username", authentication.getName());
-        }
-        return "dashboard";
-    }
+
 //    @GetMapping("/reset-password")
 //    public String showresetPage(Model model) {
 //        return "reset-password";
@@ -57,19 +51,14 @@ public class dashboardController {
         return "welcome";
     }
 
-    @GetMapping("/vid")
+    @GetMapping({"/","vid"})
     public String layout(Model model) {
 
         // model.addAttribute("listEmployee",employeeService.getAllEmployee());
         return "layout";
     }
 
-    @GetMapping("/alltest")
-    public String createTest(Model model) {
 
-        model.addAttribute("testEntity", new TestEntity());
-        return "create-testcase";
-    }
 
 
 
@@ -80,14 +69,9 @@ public class dashboardController {
         return "create-project-2";
     }
 
-    @GetMapping("/testlist")
-    public String TestList(Model model) {
 
-        // model.addAttribute("listEmployee",employeeService.getAllEmployee());
-        return "project-list";
-    }
 
-    @GetMapping("/testerr")
+    @GetMapping("/err")
     public String Testerr(Model model) {
 
         // model.addAttribute("listEmployee",employeeService.getAllEmployee());

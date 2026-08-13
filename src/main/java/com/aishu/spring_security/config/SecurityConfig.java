@@ -41,12 +41,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // .requestMatchers("/register", "/login", "/signup", "/dashboard",
-                        // "/page/register", "/css/**", "/js/**",
-                        // "/images/**","/fontawesome/**","/fonts/**",
-                        // "/reports/addcbc").permitAll()
-                        .anyRequest().permitAll()
-                // .authenticated()
+                         .requestMatchers("/welcome","/testwheel", "/login", "/signup", "/dashboard",
+                         "/assets/**", "/css/**", "/js/**","/saveWizard",
+                         "/images/**","/fontawesome/**","/fonts/**",
+                         "/").permitAll()
+                        .anyRequest().authenticated()
+                // .permitAll()
                 )
                 // Form login
                 .formLogin(form -> form
@@ -61,7 +61,7 @@ public class SecurityConfig {
 //                                request.getSession().setAttribute("signupSuccess", "Signup successful!");
 //                                response.sendRedirect("/login"); // after signup, go to login page
                             } else {
-                                response.sendRedirect("/"); // fallback
+                                response.sendRedirect("/signup"); // fallback
                             }
                         })
                             // request.getSession().setAttribute("loginSuccess", "Login
@@ -81,7 +81,7 @@ public class SecurityConfig {
                                 request.getSession().setAttribute("signupError", "Signup failed! Please try again.");
                                 response.sendRedirect("/signup");
                             } else {
-                                response.sendRedirect("/"); // fallback
+                                response.sendRedirect("/signup"); // fallback
                             }
                         })
 

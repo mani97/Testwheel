@@ -45,7 +45,7 @@
       </div>
        <div class="col-md-6 col-xl-5 pt-4 pt-md-0">
         <div class="option-group">
-        <div class="option brdr-r-16">
+        <div class="option brdr-r-16 role-option" data-value="Software Developer" >
           <div class="row align-items-center">
             <div class="col-lg-4"><img th:src="@{assets/images/software-developer.svg}" alt="Software Developer"></div>
             <div class="col-lg-8">
@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-        <div class="option brdr-r-16">
+        <div class="option brdr-r-16 role-option" data-value="QA Engineer / Tester" >
           <div class="row align-items-center">
             <div class="col-lg-4"><img th:src="@{assets/images/qa-engineer.svg}" alt="QA Engineer / Tester"></div>
             <div class="col-lg-8">
@@ -63,7 +63,7 @@
             </div>
           </div>
         </div>
-        <div class="option brdr-r-16">
+        <div class="option brdr-r-16 role-option" data-value="Product Lead / Manager" >
           <div class="row align-items-center">
             <div class="col-lg-4"><img th:src="@{assets/images/product-lead.svg}" alt="Product Lead / Manager"></div>
             <div class="col-lg-8">
@@ -79,13 +79,13 @@
     <div class="step">
       <div class="row justify-content-center">
         <div class="col-md-6 col-xl-5 align-self-center"><h3 class="head-h3 dmsans-semibold text-color1">Organization Name</h3></div>
-        <div class="col-md-6 col-xl-5 pt-4 pt-md-0"> 
+        <div class="col-md-6 col-xl-5 pt-4 pt-md-0">
       <input type="text" id="productName" class="form-control form-input" placeholder="Enter Your Company or Team Name">
       <div id="" class="text-color9 error-text px-0 pt-1">Enter Company or Team Name</div>
      </div>
     </div>
    <div class="row justify-content-center">
-      <div class="offset-4 col-md-8 col-xxl-6 pt-4 pt-md-0"> 
+      <div class="offset-4 col-md-8 col-xxl-6 pt-4 pt-md-0">
     <div class="row m-t-36 justify-content-end">
 <div class="offset-5 col-md-6 col-5 col-xl-5 col-xxl-4 m-t-24 mt-md-0">
   <button class="btn btn-create dmsans-semibold w-100 px-lg-4 p-t-12 p-b-12 text-white icon-hover" id="continueBtn">Continue <i class="fa-solid fa-arrow-right ps-1"></i></button></div>
@@ -96,12 +96,12 @@
   <div class="step">
       <div class="row justify-content-center">
         <div class="col-md-3 align-self-center"><h3 class="head-h3 dmsans-semibold text-color1 text-xl-center">Team Size</h3></div>
-        <div class="col-md-8 col-lg-7 col-xxl-6 pt-4 pt-md-0"> 
+        <div class="col-md-8 col-lg-7 col-xxl-6 pt-4 pt-md-0">
          <!--  <div class="option-group m-t-16">
         <div class="option brdr-r-16"> -->
           <div class="row justify-content-md-end">
             <div class="col-sm-5 col-md-6 col-lg-5 col-xxl-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center team-option" data-value="1-8">
             <div class="col-3"><img th:src="@{assets/images/team-size.svg}" alt="Team Size"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">1-8</p>
@@ -109,7 +109,7 @@
           </div>
             </div>
             <div class="col-sm-5 col-md-6 col-lg-5 col-xxl-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center team-option" data-value="8-20">
             <div class="col-3"><img th:src="@{assets/images/team-size-1.svg}" alt="Team Size"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">8–20</p>
@@ -119,7 +119,7 @@
           </div>
           <div class="row justify-content-md-end">
             <div class="col-sm-5 col-md-6 col-lg-5 col-xxl-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center team-option" data-value="20-50">
             <div class="col-3"><img th:src="@{assets/images/team-size-2.svg}" alt="Team Size"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">20–50</p>
@@ -127,7 +127,7 @@
           </div>
             </div>
             <div class="col-sm-5 col-md-6 col-lg-5 col-xxl-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center team-option" data-value="50+">
             <div class="col-3"><img th:src="@{assets/images/team-size-3.svg}" alt="Team Size"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">50+</p>
@@ -146,10 +146,10 @@
           <h3 class="head-h3 dmsans-semibold text-color1">Which platform would you like to use in TestWheel?</h3>
           <p class="text-start para-f3 text-color4 dmsans-regular m-t-8">You can choose more than one platform.</p>
         </div>
-        <div class="col-md-8 col-xxl-6 pt-4 pt-md-0"> 
+        <div class="col-md-8 col-xxl-6 pt-4 pt-md-0">
         <div class="row justify-content-md-end">
             <div class="col-sm-5 col-md-6 col-lg-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center platform-option" data-value="Web">
             <div class="col-3"><img th:src="@{assets/images/web.svg}" alt="Web"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">Web</p>
@@ -157,7 +157,7 @@
           </div>
             </div>
             <div class="col-sm-5 col-md-6 col-lg-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center platform-option" data-value="Mobile">
             <div class="col-3"><img th:src="@{assets/images/mobile.svg}" alt="Mobile"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">Mobile</p>
@@ -167,7 +167,7 @@
           </div>
           <div class="row justify-content-md-end">
             <div class="col-sm-5 col-md-6 col-lg-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center platform-option" data-value="API">
             <div class="col-3"><img th:src="@{assets/images/api.svg}" alt="API"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">API</p>
@@ -175,7 +175,7 @@
           </div>
             </div>
             <div class="col-sm-5 col-md-6 col-lg-4 option-group">
-              <div class="row option brdr-r-16 justify-content-center">
+              <div class="row option brdr-r-16 justify-content-center platform-option" data-value="Desktop">
             <div class="col-3"><img th:src="@{assets/images/desktop.svg}" alt="Desktop"></div>
             <div class="col-6 align-self-center">
               <p class="text-lg-center para-f1 dmsans-semibold text-color1">Desktop</p>
@@ -186,10 +186,10 @@
     </div>
     </div>
  <div class="row justify-content-center">
-      <div class="offset-4 col-md-8 col-xxl-6 pt-4 pt-md-0"> 
+      <div class="offset-4 col-md-8 col-xxl-6 pt-4 pt-md-0">
     <div class="row m-t-36 justify-content-end">
 <div class="col-md-6 col-5 col-xl-5 col-xxl-4 m-t-24 mt-md-0">
-  <button class="btn btn-create dmsans-semibold w-100 px-lg-4 p-t-12 p-b-12 text-white icon-hover" id="continueBtn">Continue <i class="fa-solid fa-arrow-right ps-1"></i></button></div>
+  <button class="btn btn-create dmsans-semibold w-100 px-lg-4 p-t-12 p-b-12 text-white icon-hover" id="continueBt" >Continue <i class="fa-solid fa-arrow-right ps-1"></i></button></div>
 </div>
 </div>
 </div>
@@ -324,6 +324,146 @@ progress.forEach((bar, index) => {
   });
 });
   </script>
+
+
+<!--  <script>-->
+<!--    let wizardData = {-->
+
+<!--    };-->
+<!--    //role selection-->
+<!--    document.querySelectorAll(".role-option").forEach(opt => {-->
+<!--  opt.addEventListener("click", function() {-->
+<!--    // remove highlight from all-->
+<!--    document.querySelectorAll(".role-option").forEach(o => o.classList.remove("selected"));-->
+<!--    // highlight clicked-->
+<!--    this.classList.add("selected");-->
+
+<!--    // store selected role-->
+<!--    WizardData.role = this.getAttribute("data-value");-->
+<!--    }});-->
+
+<!--   // capture platform-->
+<!--    document.querySelectorAll(".option-group .option").forEach(opt => {-->
+<!--        opt.addEventListener("click", function() {-->
+<!--            wizardData.platform = this.innerText.trim();-->
+<!--        });-->
+<!--    });-->
+
+<!--    // ORGANIZATION NAME-->
+<!--document.getElementById("continueBtn").addEventListener("click", function(e) {-->
+<!--  e.preventDefault();-->
+
+<!--  const orgName = document.getElementById("productName").value.trim();-->
+
+<!--  if (!orgName) {-->
+<!--    alert("Please enter your company or team name!");-->
+<!--    return;-->
+<!--  }-->
+
+<!--  // Save into wizardData-->
+<!--  wizardData.organizationName = orgName;-->
+<!--  });-->
+
+<!--    // capture team size-->
+<!--    document.querySelectorAll(".team-option").forEach(opt => {-->
+<!--        opt.addEventListener("click", function() {-->
+<!--            wizardData.teamSize = this.getAttribute("data-value");-->
+<!--        });-->
+<!--    });-->
+
+
+
+<!--    // final submit-->
+<!--    document.getElementById("continueBt").addEventListener("click", function() {-->
+<!--        // ensure org name is captured-->
+<!--        fetch('/saveWizard', {-->
+<!--            method: 'POST',-->
+<!--            headers: { 'Content-Type': 'application/json' },-->
+<!--            body: JSON.stringify(wizardData)-->
+<!--        })-->
+<!--        .then(res => res.json())-->
+<!--        .then(data => {-->
+<!--            console.log("Saved:", data);-->
+<!--            window.location.href = "/login"; // redirect to Thymeleaf page-->
+<!--        })-->
+<!--        .catch(err => console.error("Error:", err));-->
+<!--    });-->
+<!--</script>-->
+
+<script>
+    let wizardData = {
+
+    };
+
+    // role selection
+    document.querySelectorAll(".role-option").forEach(opt => {
+      opt.addEventListener("click", function() {
+        document.querySelectorAll(".role-option").forEach(o => o.classList.remove("selected"));
+        this.classList.add("selected");
+
+        wizardData.role = this.getAttribute("data-value");
+        console.log("Selected role:", wizardData.role);
+      });
+    });
+
+
+    // organization name
+    document.getElementById("continueBtn").addEventListener("click", function(e) {
+      e.preventDefault();
+      const orgName = document.getElementById("productName").value.trim();
+      if (!orgName) {
+        alert("Please enter your company or team name!");
+        return;
+      }
+      wizardData.organizationName = orgName;
+      console.log("Organization:", wizardData.organizationName);
+    });
+
+    // team size
+    document.querySelectorAll(".team-option").forEach(opt => {
+      opt.addEventListener("click", function() {
+        document.querySelectorAll(".team-option").forEach(o => o.classList.remove("selected"));
+        this.classList.add("selected");
+
+        wizardData.teamSize = this.getAttribute("data-value");
+        console.log("Team size:", wizardData.teamSize);
+      });
+    });
+
+     // platform
+    document.querySelectorAll(".platform-option").forEach(opt => {
+      opt.addEventListener("click", function() {
+        document.querySelectorAll(".platform-option").forEach(o => o.classList.remove("selected"));
+        this.classList.add("selected");
+
+        wizardData.platform = this.getAttribute("data-value");
+        console.log("platform:", wizardData.platform);
+      });
+    });
+
+    // final submit
+    document.getElementById("continueBt").addEventListener("click", function() {
+      fetch('/saveWizard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(wizardData)
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Saved:", data);
+        window.location.href = "/welcome";
+      })
+      .catch(err => console.error("Error:", err));
+    });
+</script>
+
+
+
+
+
+
+
+
 <!-- end of layout -->
 </body>
 </html>

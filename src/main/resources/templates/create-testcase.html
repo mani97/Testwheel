@@ -148,7 +148,7 @@
             <ul class="menu">
                 <!-- <div class="m-t-36 mb-1"><p class="text-color5 sidebar-head para-f4 dmsans-semibold">Home</p></div> -->
                 <li class="m-t-36">
-                    <a th:href="@{/}" class="active"><span class="d-flex">
+                    <a th:href="@{/dashboard}" class="active"><span class="d-flex">
         <img loading="lazy" th:src="@{assets/images/dashboard-icon.svg}" alt="Dashboard" class="p-r-12 image-default">
         <img loading="lazy" th:src="@{assets/images/dashboard-icon-active.svg}" alt="Dashboard" class="p-r-12 image-active">
         <span class="menu-text para-f3 align-self-center">Dashboard</span></span></a>
@@ -268,23 +268,23 @@
                             <form id="testForm1" th:action="@{/createtest}" method="post" th:object="${testEntity}">
                                 <div class="p-t-16">
                                     <label class="form-label px-0">Test Name *</label>
-                                    <input type="text" id="productName" class="form-control form-input" placeholder="e.g., Login Flow Test">
+                                    <input type="text" id="productName" th:field="*{testName}" class="form-control form-input" placeholder="e.g., Login Flow Test">
                                     <div id="" class="text-color9 error-text px-0 pt-1">Enter Test Name</div>
                                 </div>
 
                                 <div class="p-t-16 module-wrapper">
                                     <label class="form-label">Module *</label>
-                                    <input type="text" th:field="*{modules}" class="form-control form-input" placeholder="Search or create module...">
+                                    <input type="text" id="modules" th:field="*{modules}" class="form-control form-input" placeholder="Search or create module...">
                                 </div>
 
                                 <div class="p-t-16 module-wrapper">
                                     <label class="form-label">Tags</label>
-                                    <input type="text" th:field="*{tag}" class="form-control form-input" placeholder="Type and press Enter to add tags">
+                                    <input type="text" id="tagInput" th:field="*{tag}" class="form-control form-input" placeholder="Type and press Enter to add tags">
                                 </div>
 
                                 <div class="p-t-16">
                                     <label class="form-label">Description</label>
-                                    <textarea th:field="*{description}" class="form-control form-input" rows="6" cols="50" placeholder="Describe what this test does..."></textarea>
+                                    <textarea id="description" th:field="*{description}" class="form-control form-input" rows="6" cols="50" placeholder="Describe what this test does..."></textarea>
                                 </div>
                             </form>
 
@@ -304,6 +304,7 @@
                     <div class="step" id="step3">
 
                         <form id="testForm2" th:action="@{/createtest}" method="post" th:object="${testEntity}">
+                            <input type="hidden" id="APIprotocol" th:field="*{APIprotocol}" value="HTTP / REST">
                             <div class="row justify-content-center">
                                 <div class="col-lg-7 col-xl-6 col-xxl-5">
                                     <div id="sectionA" class="step3-section d-none">
@@ -311,15 +312,55 @@
                                         <p class="para-f3 dmsans-regular text-color4 m-t-8 text-center">Enter the URL to test</p>
                                         <div class="p-t-16">
                                             <label class="form-label px-0">Website URL *</label>
-                                            <input th:field="*{WebsiteUrl}" type="text" id="productName" class="form-control form-input" placeholder="https://example.com">
+                                            <input th:field="*{WebsiteUrl}" type="text" id="websiteUrl" class="form-control form-input" placeholder="https://example.com">
                                             <div id="" class="text-color9 error-text px-0 pt-1">Enter Website URL</div>
                                         </div>
 
+                                        <style>
+                                            /* Default checkbox style */
+                                            .form-check-input {
+                                                width: 20px;
+                                                height: 20px;
+                                                cursor: pointer;
+                                            }
+
+                                            /* When checked, show green background with tick */
+                                            .form-check-input:checked {
+                                            content: "✔";
+                                                background-color: #28a745;   /* Bootstrap green */
+                                                border-color: #28a745;
+                                                position: relative;
+                                            }
+
+                                            /* Add tick mark overlay */
+                                            .form-check-input:checked::after {
+                                                content: "✔";
+                                                color: green;
+                                                font-size: 14px;
+                                                position: absolute;
+                                                top: 0;
+                                                left: 4px;
+                                            }
+                                        </style>
+
 
                                         <div class="form-check p-t-16 d-flex align-items-center">
-                                            <input class="form-check-input form-checkbox me-2 mt-0" type="checkbox" value="" id="">
-                                            <label class="form-check-label mb-0 text-color1 para-f4 dmsans-regular" for=""> Tests backend APIs along with UI actions</label>
+                                            <input class="form-check-input form-checkbox me-2 mt-0" type="checkbox" th:field="*{backendApiTest}" id="backendApiTest" onchange="updateBoolean(this)">
+                                            <label class="form-check-label mb-0 text-color1 para-f4 dmsans-regular" for="backendApiTest"> Tests backend APIs along with UI actions</label>
+
                                         </div>
+                                        <script>
+                                            function updateBoolean(cb) {
+                                                const value = cb.checked;   // true if ticked, false if unticked
+                                                console.log("Boolean result:", value);
+
+                                                // Example: store in hidden field if needed
+                                                document.getElementById("backendApiHidden").value = value;
+                                            }
+                                        </script>
+
+                                        <!-- Hidden field if you want to explicitly send boolean -->
+                                        <input type="hidden" id="backendApiHidden" name="backendApiTest" value="false">
 
 
 
@@ -425,7 +466,7 @@
                                         <button class="btn btn-border-bg dmsans-semibold w-100 px-lg-4 p-t-12 p-b-12 text-color1" onclick="goToStep(2)">Back</button>
                                     </div>
                                     <div class="col-md-6 m-t-24 mt-md-0">
-                                        <button type="button"  class="btn btn-create dmsans-semibold w-100 px-lg-4 p-t-12 p-b-12 text-white" onclick="submitForm()">Complete Setup</button></div>
+                                        <button type="submit"  class="btn btn-create dmsans-semibold w-100 px-lg-4 p-t-12 p-b-12 text-white" onclick="submitBothForms()">Complete Setup</button></div>
                                 </div>
                             </div>
                         </div>
@@ -561,58 +602,108 @@
     </script>
 
     <script>
-        function submitAllForms() {
-            // Collect values from multiple forms
-            const Form1 = new FormData(document.getElementById("testForm1"));
-            const Form2 = new FormData(document.getElementById("testForm2"));
+    function submitBothForms1() {
+    // Collect Form 1 data
+    const form1Data = {
+    testName: document.querySelector('#testForm1 [id="productName"]').value,
+    modules: document.querySelector('#testForm1 [name="modules"]').value,
+    tag: document.querySelector('#testForm1 [name="tag"]').value,
+    description: document.querySelector('#testForm1 [name="description"]').value
+    };
 
-            // Merge into one object
-            const formData = {};
-            for (let [key, value] of form1.entries()) { formData[key] = value; }
-            for (let [key, value] of form2.entries()) { formData[key] = value; }
+    // Collect Form 2 data
+    const form2Data = {
+    websiteUrl: document.querySelector('#testForm2 [name="WebsiteUrl"]').value,
+    backendApiTest: document.querySelector('#testForm2 [type="checkbox"]').checked,
+    APIProtocol: document.querySelector('#testForm2 [name="APIProtocol"]')?.value || "HTTP/REST"
+    };
 
-            // Send AJAX request
-            fetch('/createtest', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Saved:", data);
-                document.getElementById("successMessage").classList.remove("d-none");
-                goToStep(3); // advance wizard
-            })
-            .catch(error => console.error("Error:", error));
-        }
+    // Merge both into one payload
+    const combinedData = { ...form1Data, ...form2Data };
+
+    // Send to backend
+    fetch('/createtest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(combinedData)
+    })
+    .then(response => response.json())
+    .then(data => {
+    console.log("Saved:", data);
+    document.getElementById("successMessage").classList.remove("d-none");
+    })
+    .catch(error => console.error("Error:", error));
+    }
     </script>
 
 
     <script>
-        function submitForm() {
-            const formData = {
-                testName: document.querySelector('[name="testName"]').value,
-                modules: document.querySelector('[name="modules"]').value,
-                tag: document.querySelector('[name="tag"]').value,
-                description: document.querySelector('[name="description"]').value
-            };
+        function submitBothForms() {
+            // Collect Form 1 & Form 2 inputs safely
+            const testName = document.getElementById('productName')?.value || document.querySelector('[name="testName"]')?.value || '';
+            const modules = document.getElementById('modules')?.value || document.querySelector('[name="modules"]')?.value || '';
+            const tag = document.getElementById('tagInput')?.value || document.querySelector('[name="tag"]')?.value || '';
+            const description = document.getElementById('description')?.value || document.querySelector('[name="description"]')?.value || '';
+            const websiteUrl = document.getElementById('websiteUrl')?.value || document.querySelector('[name="WebsiteUrl"]')?.value || '';
+            const backendApiTest = document.getElementById('backendApiTest')?.checked || false;
+            const apiProtocol = document.getElementById('APIprotocol')?.value || 'HTTP / REST';
 
+            // Construct URLSearchParams payload for Spring @ModelAttribute binding
+            const params = new URLSearchParams();
+            params.append('testName', testName);
+            params.append('modules', modules);
+            params.append('tag', tag);
+            params.append('description', description);
+            params.append('WebsiteUrl', websiteUrl);
+            params.append('backendApiTest', backendApiTest);
+            params.append('APIprotocol', apiProtocol);
+
+            // POST to /createtest
             fetch('/createtest', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Saved:", data);
-                document.getElementById("successMessage").classList.remove("d-none");
-                // move wizard forward
-
-
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    window.location.href = '/alltest';
+                }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Fetch submission failed, submitting form natively:", error);
+                // Fallback: programmatic hidden form submission
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/createtest';
+
+                const fields = {
+                    testName,
+                    modules,
+                    tag,
+                    description,
+                    WebsiteUrl: websiteUrl,
+                    backendApiTest,
+                    APIprotocol: apiProtocol
+                };
+
+                for (const [key, val] of Object.entries(fields)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = val;
+                    form.appendChild(input);
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            });
         }
     </script>
+
 
     <script th:src="@{assets/js/tw-scripts.js}"></script>
     <script th:src="@{assets/js/jquery.min.js}"></script>

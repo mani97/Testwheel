@@ -7,13 +7,13 @@
   </title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
- <link href="assets/css/common-styles.css" rel="stylesheet">
-  <link href="assets/css/login-styles.css" rel="stylesheet">
-  <link href="assets/css/error-styles.css" rel="stylesheet">
-  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/fontawesome/css/all.min.css" rel="stylesheet">
-  <script src="assets/js/jquery.min.js"></script>
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
+ <link th:href="@{assets/css/common-styles.css}" rel="stylesheet">
+  <link th:href="@{assets/css/login-styles.css}" rel="stylesheet">
+  <link th:href="@{assets/css/error-styles.css}" rel="stylesheet">
+  <link th:href="@{assets/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{assets/fontawesome/css/all.min.css}" rel="stylesheet">
+  <script th:src="@{assets/js/jquery.min.js}"></script>
+  <script th:src="@{assets/js/bootstrap.bundle.min.js}"></script>
   
 </head>
 
@@ -53,7 +53,7 @@
       <div class="container-fluid container-xxl">
         <div class="row justify-content-center">
           <div class="text-center">
-              <img class="error-img mw-100" src="https://d1dn83zl6bhqp.cloudfront.net/images/error.svg" alt="404 Error">
+              <img class="error-img mw-100" th:src="@{https://d1dn83zl6bhqp.cloudfront.net/images/error.svg}" alt="404 Error">
               <h1 class="head-h2 text-color1 dmsans-medium mb-0 m-t-16">Page Not Found</h1>
               <p class="text-center text-color1 dmsans-medium para-f2 m-t-16 m-b-24 px-r-0">oH no! We can’t find the page you’re looking for.</p>
               <p class="text-center text-color1 dmsans-semibold para-f3 m-b-16 px-r-0">Log in again to continue your work</p>

@@ -3,6 +3,7 @@ package com.aishu.spring_security.controller;
 
 import com.aishu.spring_security.Repository.ProjectRepo;
 import com.aishu.spring_security.model.Project;
+import com.aishu.spring_security.model.TestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +21,7 @@ public class projectController {
     @GetMapping("/createproject")
     public String createProject(Model model) {
 
-        //model.addAttribute("project",new Project());
+        //model.addAttribute("testEntity",new TestEntity());
         return "create-project";
     }
 
