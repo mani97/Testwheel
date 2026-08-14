@@ -18,9 +18,9 @@ public class Project {
 
 
 
-    @Column(nullable = false)
+
     private String projectName;
 
 
-    private String projectURL;
+    private String projectUrl;
 }

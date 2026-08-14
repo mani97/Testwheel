@@ -427,6 +427,11 @@ progress.forEach((bar, index) => {
 
         wizardData.teamSize = this.getAttribute("data-value");
         console.log("Team size:", wizardData.teamSize);
+
+        // unlock and move to next step immediately
+    unlockedStep = Math.max(unlockedStep, currentStep + 1);
+    progress[unlockedStep].classList.add("unlocked");
+    showStep(currentStep + 1);
       });
     });
 
