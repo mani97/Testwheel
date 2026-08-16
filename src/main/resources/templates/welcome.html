@@ -80,9 +80,15 @@
       <div class="row justify-content-center">
         <div class="col-md-6 col-xl-5 align-self-center"><h3 class="head-h3 dmsans-semibold text-color1">Organization Name</h3></div>
         <div class="col-md-6 col-xl-5 pt-4 pt-md-0">
-      <input type="text" id="productName" class="form-control form-input" placeholder="Enter Your Company or Team Name">
-      <div id="" class="text-color9 error-text px-0 pt-1">Enter Company or Team Name</div>
-     </div>
+            <label for="productName"></label><input type="text" id="productName" class="form-control form-input" placeholder="Enter Your Company or Team Name">
+      <div id="orgError" class="text-danger d-none"> Organization name must be 3–50 character etc, - only.</div>
+            <!-- Inline CSS -->
+            <style>
+                .input-error {
+                    border: 2px solid red;
+                }
+            </style>
+        </div>
     </div>
    <div class="row justify-content-center">
       <div class="offset-4 col-md-8 col-xxl-6 pt-4 pt-md-0">
@@ -257,7 +263,7 @@ function showStep(index) {
 
 document.getElementById("continueBtn").addEventListener("click", () => {
   unlockedStep = 2; 
-  showStep(2);
+  //showStep(2);
 });
 
 // INIT
@@ -325,71 +331,6 @@ progress.forEach((bar, index) => {
 });
   </script>
 
-
-<!--  <script>-->
-<!--    let wizardData = {-->
-
-<!--    };-->
-<!--    //role selection-->
-<!--    document.querySelectorAll(".role-option").forEach(opt => {-->
-<!--  opt.addEventListener("click", function() {-->
-<!--    // remove highlight from all-->
-<!--    document.querySelectorAll(".role-option").forEach(o => o.classList.remove("selected"));-->
-<!--    // highlight clicked-->
-<!--    this.classList.add("selected");-->
-
-<!--    // store selected role-->
-<!--    WizardData.role = this.getAttribute("data-value");-->
-<!--    }});-->
-
-<!--   // capture platform-->
-<!--    document.querySelectorAll(".option-group .option").forEach(opt => {-->
-<!--        opt.addEventListener("click", function() {-->
-<!--            wizardData.platform = this.innerText.trim();-->
-<!--        });-->
-<!--    });-->
-
-<!--    // ORGANIZATION NAME-->
-<!--document.getElementById("continueBtn").addEventListener("click", function(e) {-->
-<!--  e.preventDefault();-->
-
-<!--  const orgName = document.getElementById("productName").value.trim();-->
-
-<!--  if (!orgName) {-->
-<!--    alert("Please enter your company or team name!");-->
-<!--    return;-->
-<!--  }-->
-
-<!--  // Save into wizardData-->
-<!--  wizardData.organizationName = orgName;-->
-<!--  });-->
-
-<!--    // capture team size-->
-<!--    document.querySelectorAll(".team-option").forEach(opt => {-->
-<!--        opt.addEventListener("click", function() {-->
-<!--            wizardData.teamSize = this.getAttribute("data-value");-->
-<!--        });-->
-<!--    });-->
-
-
-
-<!--    // final submit-->
-<!--    document.getElementById("continueBt").addEventListener("click", function() {-->
-<!--        // ensure org name is captured-->
-<!--        fetch('/saveWizard', {-->
-<!--            method: 'POST',-->
-<!--            headers: { 'Content-Type': 'application/json' },-->
-<!--            body: JSON.stringify(wizardData)-->
-<!--        })-->
-<!--        .then(res => res.json())-->
-<!--        .then(data => {-->
-<!--            console.log("Saved:", data);-->
-<!--            window.location.href = "/login"; // redirect to Thymeleaf page-->
-<!--        })-->
-<!--        .catch(err => console.error("Error:", err));-->
-<!--    });-->
-<!--</script>-->
-
 <script>
     let wizardData = {
 
@@ -410,13 +351,30 @@ progress.forEach((bar, index) => {
     // organization name
     document.getElementById("continueBtn").addEventListener("click", function(e) {
       e.preventDefault();
-      const orgName = document.getElementById("productName").value.trim();
-      if (!orgName) {
-        alert("Please enter your company or team name!");
+      const orgInput = document.getElementById("productName");
+    const orgError = document.getElementById("orgError");
+    const orgName = orgInput.value.trim();
+    const regex = /^(?=.*[A-Za-z])[A-Za-z0-9&\-\s]{3,50}$/;
+
+
+      if (!regex.test(orgName)) {
+        orgInput.classList.add("input-error");
+        orgError.classList.remove("d-none");
+
+        //  Stay on current step, do not advance
         return;
       }
+
+    // Clear error styling if valid
+    orgInput.classList.remove("input-error");
+    orgError.classList.add("d-none");
+
       wizardData.organizationName = orgName;
       console.log("Organization:", wizardData.organizationName);
+unlockedStep = Math.max(unlockedStep, currentStep + 1);
+progress[unlockedStep].classList.add("unlocked");
+showStep(currentStep+1);
+
     });
 
     // team size

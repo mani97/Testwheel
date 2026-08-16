@@ -51,41 +51,10 @@ public class SecurityConfig {
                 // Form login
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .successHandler((request, response, authentication) -> {
-                            String uri = request.getRequestURI();
-                            if (uri.equals("/login")) {
-                                request.getSession().setAttribute("loginSuccess", "Login successful!");
-                                response.sendRedirect("/dashboard");
-//                            } else if (uri.equals("/signup")) {
-//
-//                                request.getSession().setAttribute("signupSuccess", "Signup successful!");
-//                                response.sendRedirect("/login"); // after signup, go to login page
-                            } else {
-                                response.sendRedirect("/signup"); // fallback
-                            }
-                        })
-                            // request.getSession().setAttribute("loginSuccess", "Login
-                            // successful!");//${session.loginSuccess}.
-                            //response.sendRedirect("/dashboard");
-                            // .defaultSuccessUrl("/dashboard", true)
-                            // .permitAll()
-                        //})
-
-                        .failureHandler((request, response, exception) -> {
-                            String uri = request.getRequestURI();
-
-                            if (uri.equals("/login")) {
-                                request.getSession().setAttribute("loginError", "Invalid username or password!?");
-                                response.sendRedirect("/login");
-                            } else if (uri.equals("/signup")) {
-                                request.getSession().setAttribute("signupError", "Signup failed! Please try again.");
-                                response.sendRedirect("/signup");
-                            } else {
-                                response.sendRedirect("/signup"); // fallback
-                            }
-                        })
-
-
+                        .loginProcessingUrl("/perform_login")
+                        .defaultSuccessUrl("/dashboard", true)    // redirect after success
+                        .failureUrl("/login?error=true")          // redirect on failure
+                        .permitAll()
                 )
                 // OAuth2 login
                 .oauth2Login(oauth2 -> oauth2
@@ -93,11 +62,14 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/dashboard", true))
                 // Logout
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        //.logoutSuccessUrl("/login?logout")
+                        .logoutUrl("/perform_logout")                // custom logout URL
+                        .logoutSuccessUrl("/login?logout=true")      // redirect after logout
+                        .deleteCookies("JSESSIONID", "accessToken")  // clear cookies
+                        .invalidateHttpSession(true)                 // invalidate session
                         .permitAll())
                 // Session + JWT
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .maximumSessions(1) )// restrict concurrent logins per user
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

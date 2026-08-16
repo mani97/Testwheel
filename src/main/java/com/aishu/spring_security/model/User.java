@@ -14,8 +14,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
 
+public class User {
 
 
     @Id
@@ -26,25 +26,21 @@ public class User {
     @Column(nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+
     private String lastName;
 
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false , unique = true)
+    @Column(nullable = false, unique = true)
     private String phone;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+
     private String confirmPassword;
 
     private String pictureUrl;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OauthAccount> oauthAccounts = new ArrayList<>();
-
 
 }

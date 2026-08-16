@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <title>
@@ -99,12 +99,12 @@
                 <div class="d-flex brdr-btm-1 p-3">
                     <div class="col-auto">
                         <div class="profile-avatar">
-                            SJ
+                            <span th:text="${firstLetter}"></span>
                         </div>
                     </div>
                     <div class="col-11">
-                        <p class="para-f4 dmsans-semibold px-3 text-color1">Alex Rivest</p>
-                        <p class="para-f4 px-3 text-color6">alex.rivest@testwheel.com</p>
+                        <p class="para-f4 dmsans-semibold px-3 text-color1" sec:authentication="name"></p>
+                        <p class="para-f4 px-3 text-color6" sec:authentication="name"></p>
                     </div>
                 </div>
                 <ul>

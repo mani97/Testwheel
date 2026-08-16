@@ -9,24 +9,24 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@Table(name="oauth_accounts")
+@Table(name="tokens")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class oauth {
+public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String provider;
-    private String providerUserId;
-    private String accessToken;
-    private String refreshToken;
-    private LocalDateTime expiresAt;
+    private String provider;  //google,github
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String tokenType; // "access" or "refresh"
+
+    private String tokenValue; //access,refresh
+    private LocalDateTime expiresAt;
+    private boolean revoked = false;
+
+    private String username;
 
 
 }

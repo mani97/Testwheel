@@ -119,8 +119,9 @@
               <p class="para-f4 dmsans-semibold px-3 text-color1" sec:authentication="name">u</p>
               <p sec:authorize="isAuthenticated()"></p>
               <!--                <p sec:authorize="isAnonymous()"></p>-->
-              <p class="para-f4 px-3 text-color6" sec:authentication="name"></p>
+              <p class="para-f4 px-3 text-color6" th:text="${currentUser.firstName}"></p>
               <!--                <p class="para-f4 dmsans-semibold px-3 text-color1" th:text="${username}"></p>-->
+              <span th:text="${firstName}"></span>
             </div>
           </div>
           <ul>
@@ -137,7 +138,7 @@
               Support</a>
             </li>
             <li class="brdr-top-1 py-3 px-2"><a class="dropdown-item text-color8 dmsans-semibold"
-                                                th:href="@{/logout}">
+                                                th:href="@{/perform_logout}">
               <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />Sign Out</a></li>
           </ul>
         </div>
@@ -272,6 +273,26 @@
             <div class="col-md-10 col-xxl-7">
               <div class="text-center"><img loading="lazy" th:src="@{/assets/images/workspace.svg}" alt="Testing">
               </div>
+
+<!--              <div>-->
+<!--                <h3>Cookies:</h3>-->
+<!--                <ul>-->
+<!--                  <li th:each="entry : ${cookies}">-->
+<!--                    <span th:text="${entry.key}"></span> =-->
+<!--                    <span th:text="${entry.value}"></span>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--              </div>-->
+<!--              <div>-->
+
+<!--              <p th:text="${currentUser.firstName}"></p>-->
+<!--              <p th:text="${email}"></p>-->
+
+<!--              </div>-->
+
+
+
+
               <p class="head-h3 dmsans-semibold px-3 text-color1 text-center m-t-16">Your workspace is ready for
                 testing</p>
               <p class="para-f3 text-color4 m-t-8 text-center">Connect your application and start building test

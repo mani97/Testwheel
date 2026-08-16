@@ -53,6 +53,9 @@ public class UserController {
     @Autowired
     JwtStoreService jwtStoreService;
 
+    @Autowired
+    TokenService tokenService;
+
     @PostMapping("/signup")
     public String register(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes,Model model) {
         try {
@@ -106,7 +109,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/perform_login")
     public String login(@ModelAttribute("user") User user, Model model, HttpServletResponse response) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
@@ -116,11 +119,20 @@ public class UserController {
         if (authentication.isAuthenticated()) {
             String accessToken = jwtService.generateAccessToken(user.getUsername());
             String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+
+            //db storage
+            tokenService.storeRefreshToken(user.getUsername(),refreshToken,LocalDateTime.now().plusDays(7)); //expiry matches claims
+
+            System.out.println("refreshToken: "+refreshToken);
+            System.out.println("accessToken: "+accessToken);
+
             jwtStoreService.storeToken(user.getUsername(), accessToken);
 
             response.addCookie(CookieUtil.createAccessTokenCookie(accessToken));
             response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken));
+
             System.out.println("login success");
+
             return "redirect:/dashboard";
         } else {
             model.addAttribute("present", true);

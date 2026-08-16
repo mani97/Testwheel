@@ -6,6 +6,7 @@ import com.aishu.spring_security.dao.UserPrinciple;
 import com.aishu.spring_security.Repository.UserRepo;
 import com.aishu.spring_security.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,12 +22,8 @@ public class MyUserDetailService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user =repo.findByUsername(username);
-        if(user == null)
-        {
-            System.out.println("user 404");
-            throw new UsernameNotFoundException("user 403");
-        }
-        return new UserPrinciple(user);
-    }
-}
+        User user =repo.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+       return new UserPrinciple(user);
+    }}
+

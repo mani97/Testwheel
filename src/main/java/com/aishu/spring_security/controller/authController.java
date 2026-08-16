@@ -3,9 +3,14 @@ package com.aishu.spring_security.controller;
 import com.aishu.spring_security.dao.UserPrinciple;
 import com.aishu.spring_security.model.User;
 import com.aishu.spring_security.service.CookieUtil;
+import com.aishu.spring_security.service.JwtService;
+import com.aishu.spring_security.service.JwtStoreService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -24,6 +29,11 @@ import java.util.Map;
 
 @Controller
 public class authController {
+
+    @Autowired
+    JwtService jwtService;
+    @Autowired
+    JwtStoreService jwtStoreService;
 
     // ---- Login ----
     @GetMapping("/login")
@@ -64,7 +74,7 @@ public class authController {
 //    }
 
 @GetMapping("/dashboard")
-public String profile(Model model, Authentication authentication) {
+public String profile(HttpServletRequest request,Model model, Authentication authentication) {
     if (authentication != null && authentication.isAuthenticated()) {
         Object principal = authentication.getPrincipal();
 
@@ -77,6 +87,7 @@ public String profile(Model model, Authentication authentication) {
             String firstLetter = (username != null && !username.isEmpty())
                     ? username.substring(0, 1)
                     : "?";
+
             model.addAttribute("firstLetter", firstLetter);
 
             return "dashboard";
@@ -108,7 +119,7 @@ public String profile(Model model, Authentication authentication) {
         }
     }
 
-    return "login"; // fallback if not authenticated
+    return "redirect:/login"; // fallback if not authenticated
 }
 
 
@@ -116,11 +127,23 @@ public String profile(Model model, Authentication authentication) {
 
 
     // ---- Logout (redirect) ----
-    @GetMapping("/page/logout")
-    public String logout(HttpServletResponse response) {
+    @PostMapping("/perform_logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response,Model model) {
+        Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
+        if (refreshCookie != null) {
+            String refreshToken = refreshCookie.getValue();
+            String username = jwtService.extractUsername(refreshToken);
+
+            // Invalidate tokens
+            jwtStoreService.removeToken(username);
+        }
+        // Clear cookies
         response.addCookie(CookieUtil.deleteCookie("accessToken"));
         response.addCookie(CookieUtil.deleteCookie("refreshToken"));
         response.addCookie(CookieUtil.deleteCookie("jwt"));
-        return "redirect:/login?logout";
+
+        // Show logout page
+        model.addAttribute("message", "You have been logged out successfully.");
+        return "logout";
     }
 }

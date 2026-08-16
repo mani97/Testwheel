@@ -3,6 +3,7 @@ package com.aishu.spring_security.controller;
 
 import com.aishu.spring_security.Repository.TestRepository;
 import com.aishu.spring_security.Repository.UserRepo;
+import com.aishu.spring_security.dao.UserPrinciple;
 import com.aishu.spring_security.model.TestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ public class testListController {
     UserRepo userRepo;
 
 
+
     @GetMapping("/testlist")
     public String TestList(Model model) {
         model.addAttribute("testEntity",new TestEntity());
@@ -30,6 +32,9 @@ public class testListController {
         long userCount = userRepo.count();// built-in JPA count()
         System.out.println(testCount);
         System.out.println(userCount);
+
+
+
 
         model.addAttribute("testCount", testCount);
         model.addAttribute("userCount", userCount);

@@ -54,7 +54,7 @@
 
                             <div class="frm-scrl">
                                 <!-- Form bound to UserSignup model -->
-                                <form th:action="@{/signup}" method="post" th:object="${user}">
+                                <form id="signupForm" th:action="@{/signup}" method="post" th:object="${user}">
                                     <div class="row">
                                         <div class="col-md-6 m-b-24">
                                             <label>First Name*</label>
@@ -87,7 +87,7 @@
                                     <div class="row">
                                         <div class="col-md-12 m-b-24">
                                             <label>Password*</label>
-                                            <input type="password" th:field="*{password}" placeholder="Enter Password"
+                                            <input type="password" id="password" th:field="*{password}" placeholder="Enter Password"
                                                 class="form-control">
                                         </div>
                                     </div>
@@ -95,7 +95,7 @@
                                     <div class="row">
                                         <div class="col-md-12 m-b-24">
                                             <label>Confirm Password*</label>
-                                            <input type="password" th:field="*{confirmPassword}"
+                                            <input type="password" id= "confirmPassword" th:field="*{confirmPassword}"
                                                 placeholder="Confirm Password" class="form-control">
                                         </div>
                                     </div>
@@ -158,3 +158,45 @@
     }, 3000); // 3 seconds
 </script>
 
+
+<style>
+    .error-border {
+        border: 2px solid red;
+    }
+    .valid-border {
+        border: 2px solid green;
+    }
+</style>
+
+<script>
+    const pwd = document.getElementById("password");
+const confirmPwd = document.getElementById("confirmPassword");
+
+
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+         if (pwd.value !== confirmPwd.value) {
+        e.preventDefault();
+        confirmPwd.classList.add("error-border");
+        confirmPwd.classList.remove("valid-border");
+        confirmPwd.setCustomValidity("Passwords do not match!");
+        confirmPwd.reportValidity();
+    } else {
+        confirmPwd.classList.remove("error-border");
+        confirmPwd.classList.add("valid-border");
+        confirmPwd.setCustomValidity(""); // clear error
+    }
+});
+
+    // Live validation while typing
+confirmPwd.addEventListener("input", function() {
+    if (pwd.value === confirmPwd.value) {
+        confirmPwd.classList.remove("error-border");
+        confirmPwd.classList.add("valid-border");
+        confirmPwd.setCustomValidity("");
+    } else {
+        confirmPwd.classList.add("error-border");
+        confirmPwd.classList.remove("valid-border");
+        confirmPwd.setCustomValidity("Passwords do not match!");
+    }
+});
+</script>
