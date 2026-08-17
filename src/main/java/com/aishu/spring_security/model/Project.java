@@ -21,6 +21,9 @@ public class Project {
 
     private String projectName;
 
+    private String createdBy;
 
     private String projectUrl;
+
+    private String username;
 }

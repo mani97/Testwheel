@@ -127,23 +127,24 @@ public String profile(HttpServletRequest request,Model model, Authentication aut
 
 
     // ---- Logout (redirect) ----
-    @PostMapping("/perform_logout")
-    public String logout(HttpServletRequest request,HttpServletResponse response,Model model) {
-        Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
-        if (refreshCookie != null) {
-            String refreshToken = refreshCookie.getValue();
-            String username = jwtService.extractUsername(refreshToken);
-
-            // Invalidate tokens
-            jwtStoreService.removeToken(username);
-        }
-        // Clear cookies
-        response.addCookie(CookieUtil.deleteCookie("accessToken"));
-        response.addCookie(CookieUtil.deleteCookie("refreshToken"));
-        response.addCookie(CookieUtil.deleteCookie("jwt"));
-
-        // Show logout page
-        model.addAttribute("message", "You have been logged out successfully.");
-        return "logout";
-    }
+//    @GetMapping("/perform_logout")
+//    public String logout(HttpServletRequest request,HttpServletResponse response,Model model) {
+//        Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
+//        if (refreshCookie != null) {
+//            String refreshToken = refreshCookie.getValue();
+//            String username = jwtService.extractUsername(refreshToken);
+//
+//            // Invalidate tokens
+//            jwtStoreService.revokeToken(refreshToken); // mark revoked instead of delete
+//            //jwtStoreService.removeToken(username);
+//        }
+//        // Clear cookies
+//        response.addCookie(CookieUtil.deleteCookie("accessToken"));
+//        response.addCookie(CookieUtil.deleteCookie("refreshToken"));
+//        response.addCookie(CookieUtil.deleteCookie("jwt"));
+//
+//        // Show logout page
+//        model.addAttribute("message", "You have been logged out successfully.");
+//        return "redirect:/login?logout";
+//    }
 }

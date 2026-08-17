@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApkUpload {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +21,11 @@ public class ApkUpload {
     private String filePath;
     private long fileSize;
     private LocalDateTime uploadedAt;
+
+    private String packageName;
+    private Long versionCode;
+    private String versionName;
+    private String permissions;
 
     @ManyToOne
     @JoinColumn(name = "test_id")

@@ -21,55 +21,65 @@
 <!-- HEADER -->
 <div class="page-wrapper">
   <div class="header p-t-12 p-b-12">
-    <div class="d-flex align-items-center gap-3 gap-lg-5">
-      <!-- MOBILE BUTTON -->
-      <button class="btn btn-outline-light btn-sm d-lg-none" id="mobileToggle">
-        <i class="fa-solid fa-bars text-color1"></i>
-      </button>
-      <div class="mb-0"><img loading="lazy" th:src="@{/assets/images/logo.svg}" alt="TestWheel Logo" width="149px"
-                             height="42px"></div>
-      <div class="dropdown d-md-block d-none">
-        <div class="btn-drpdwn text-color1 para-f4 dmsans-semibold p-tb-10 p-lr-16" data-bs-toggle="dropdown">
-          TestWheel<i class="fa-solid fa-chevron-down ps-3"></i>
-        </div>
-        <div class="dropdown-menu w-320  py-0 custom-dropdown">
-          <div class="d-flex justify-content-between pe-4 ps-2 brdr-btm-1 py-3">
-            <div class="col-sm-6">
-              <p class="para-f3 dmsans-semibold px-2 text-color1">Your Projects</p>
-            </div>
-            <div class="col-sm-6 text-end">
-              <div class="para-f3 text-color3 dmsans-semibold"><a href="">View All</a></div>
-            </div>
-          </div>
-          <div class="dropdown-scroll overflow-y-auto">
-            <ul>
-              <li class="px-2 p-t-16 p-b-8">
-                <a class="dropdown-item d-flex justify-content-between" th:href="@{/testwheel}">
-                    <span>
-                      <p class="dmsans-semibold text-color1">TestWheel</p>
-                      <p class="text-color4 para-f4">Created by Prakash</p>
-                    </span>
-                  <span><img th:src="@{/assets/images/project-check-icon.svg}" alt="icon"></span></a>
-              </li>
-              <li class="px-2 p-t-8 p-b-8"><a class="dropdown-item dmsans-semibold text-color1"
-                                              th:href="@{/testwheel}"><span>
-                      <p class="dmsans-semibold text-color1">E-commerce Suite</p>
-                      <p class="text-color4 para-f4">Created by Prakash</p>
-                    </span></a></li>
-              <li class="px-2 p-t-8 p-b-8"><a class="dropdown-item dmsans-semibold text-color1" href="#"><span>
-                      <p class="dmsans-semibold text-color1">API test</p>
-                      <p class="text-color4 para-f4">Created by Prakash</p>
-                    </span></a></li>
 
-            </ul>
+      <div class="d-flex align-items-center gap-3 gap-lg-5">
+        <!-- MOBILE BUTTON -->
+        <button class="btn btn-outline-light btn-sm d-lg-none" id="mobileToggle">
+          <i class="fa-solid fa-bars text-color1"></i>
+        </button>
+        <div class="mb-0"><img loading="lazy" th:src="@{/assets/images/logo.svg}" alt="TestWheel Logo" width="149px"
+                               height="42px"></div>
+
+
+        <div class="dropdown d-md-block d-none" th:fragment="projectDropdown">
+          <div  id="dropdownButton"  class="btn-drpdwn text-color1 para-f4 dmsans-semibold p-tb-10 p-lr-16" data-bs-toggle="dropdown">
+            <a th:href="@{/projects}">TestWheel</a><i class="fa-solid fa-chevron-down ps-3"></i>
           </div>
-          <div class="px-2 p-t-12 p-b-24"><a
-                  class="btn btn-create p-tb-12 p-lr-16 text-white d-md-block d-none button-f2" data-bs-toggle="modal"
-                  data-bs-target="#createProject"><img
-                  th:src="@{/assets/images/create-test-icon.svg}" alt="Icon" class="pe-2">Create Project</a></div>
+          <div class="dropdown-menu w-320  py-0 custom-dropdown">
+
+            <div class="d-flex justify-content-between pe-4 ps-2 brdr-btm-1 py-3">
+
+              <div class="col-sm-6">
+                <p class="para-f3 dmsans-semibold px-2 text-color1">Your Projects</p>
+              </div>
+
+              <div class="col-sm-6 text-end">
+                <div class="para-f3 text-color3 dmsans-semibold"><a th:href="@{/projects}">View All</a></div>
+              </div>
+
+            </div>
+
+            <div class="dropdown-scroll overflow-y-auto">
+              <ul>
+
+                <li th:each="project : ${projects}" class="px-2 p-t-16 p-b-8">
+                  <a class="dropdown-item d-flex justify-content-between project-item" href="#" th:data-name="${project.projectName}">
+                      <span>
+                        <p class="dmsans-semibold text-color1" th:text="${project.projectName}">project Name</p>
+                        <p class="text-color4 para-f4">Created By <span th:text="${project.createdBy}" ></span></p>
+                      </span>
+                    <span class="icon-slot">
+<!--                      <i class="fa-solid fa-check text-success"></i>-->
+
+                      <!--    <img th:src="@{/assets/images/project-check-icon.svg}" alt="icon">-->
+                    </span>
+                  </a>
+                </li>
+
+
+              </ul>
+            </div>
+
+            <div class="px-2 p-t-12 p-b-24"><a
+                    class="btn btn-create p-tb-12 p-lr-16 text-white d-md-block d-none button-f2" data-bs-toggle="modal"
+                    data-bs-target="#createProject"><img
+                    th:src="@{/assets/images/create-test-icon.svg}" alt="Icon" class="pe-2" th:href="@{/createproject}">Create Project</a></div>
+          </div>
+
         </div>
+
+
       </div>
-    </div>
 
 
 
@@ -120,7 +130,6 @@
               <p sec:authorize="isAuthenticated()"></p>
               <!--                <p sec:authorize="isAnonymous()"></p>-->
               <p class="para-f4 px-3 text-color6" th:text="${currentUser.firstName}"></p>
-              <!--                <p class="para-f4 dmsans-semibold px-3 text-color1" th:text="${username}"></p>-->
               <span th:text="${firstName}"></span>
             </div>
           </div>
@@ -137,9 +146,20 @@
                     th:src="@{/assets/images/help-support-icon.svg}" alt="Help & Support" class="pe-3" />Help &
               Support</a>
             </li>
-            <li class="brdr-top-1 py-3 px-2"><a class="dropdown-item text-color8 dmsans-semibold"
-                                                th:href="@{/perform_logout}">
-              <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />Sign Out</a></li>
+
+            <li class="brdr-top-1 py-3 px-2">
+              <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="dropdown-item text-color8 dmsans-semibold">
+                  <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />
+                  Sign Out
+                </button>
+              </form>
+            </li>
+
+
+
+
+
           </ul>
         </div>
       </div>
@@ -360,6 +380,33 @@
       });
   }
 </script>
+
+
+<!--     Replace Button Text + Tick-->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const button = document.getElementById("dropdownButton");
+    const items = document.querySelectorAll(".project-item");
+
+    items.forEach(item => {
+      item.addEventListener("click", function(e) {
+        e.preventDefault();
+
+        // Update button text with selected project name
+        const projectName = this.getAttribute("data-name");
+        button.innerHTML = projectName + '<i class="fa-solid fa-chevron-down ps-3"></i>';
+
+        // Remove tick from all items
+        document.querySelectorAll(".icon-slot").forEach(slot => slot.innerHTML = "");
+
+        // Add tick to selected item
+        this.querySelector(".icon-slot").innerHTML = '<i class="fa-solid fa-check text-success"></i>';
+      });
+    });
+  });
+</script>
+
+
 
 
 <script th:src="@{/assets/js/tw-scripts.js}"></script>

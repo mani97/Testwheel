@@ -93,7 +93,7 @@
         <div class="dropdown">
             <!-- <img src="assets/images/profile-img.svg" class="rounded-circle cursor-pointer" > -->
             <div class="profile-avatar" data-bs-toggle="dropdown">
-                SJ
+                <span th:text="${firstLetter}"></span>
             </div>
             <div class="dropdown-menu dropdown-menu-end w-320 pb-0 custom-dropdown">
                 <div class="d-flex brdr-btm-1 p-3">
@@ -104,7 +104,8 @@
                     </div>
                     <div class="col-11">
                         <p class="para-f4 dmsans-semibold px-3 text-color1" sec:authentication="name"></p>
-                        <p class="para-f4 px-3 text-color6" sec:authentication="name"></p>
+                        <p sec:authorize="isAuthenticated()"></p>
+                        <p class="para-f4 px-3 text-color6" th:text="${currentUser.firstName}"></p>
                     </div>
                 </div>
                 <ul>
@@ -230,7 +231,9 @@
 <div class="content" id="content">
 </div>
 <form th:action="@{/saveproject}" th:object="${project}" method="post">
-<div class="modal fade" id="createProject" tabindex="-1">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <div class="modal fade" id="createProject" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content position-relative">
             <div class="modal-body p-t-36 p-b-36 px-md-2 px-lg-3 px-xl-4 px-1 position-relative">

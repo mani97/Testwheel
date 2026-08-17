@@ -129,7 +129,7 @@ public class UserController {
             jwtStoreService.storeToken(user.getUsername(), accessToken);
 
             response.addCookie(CookieUtil.createAccessTokenCookie(accessToken));
-            response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken));
+            //response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken));
 
             System.out.println("login success");
 

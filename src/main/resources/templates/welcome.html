@@ -7,7 +7,12 @@
    TestWheel - Welcome 
   </title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   <link th:href="@{assets/css/common-styles.css}" rel="stylesheet">
   <link th:href="@{assets/css/login-styles.css}" rel="stylesheet">
   <link th:href="@{assets/css/after-login-styles.css}" rel="stylesheet">
@@ -332,6 +337,11 @@ progress.forEach((bar, index) => {
   </script>
 
 <script>
+
+    const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+
     let wizardData = {
 
     };
@@ -408,7 +418,9 @@ showStep(currentStep+1);
     document.getElementById("continueBt").addEventListener("click", function() {
       fetch('/saveWizard', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+        [header]:token,
+         'Content-Type': 'application/json' },
         body: JSON.stringify(wizardData)
       })
       .then(res => res.json())

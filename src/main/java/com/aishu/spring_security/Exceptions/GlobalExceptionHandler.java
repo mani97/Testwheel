@@ -1,5 +1,6 @@
 package com.aishu.spring_security.Exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,4 +70,20 @@ public class GlobalExceptionHandler {
 
 
     }
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Token expired. Please login again.");
+    }
+
+    // You can add other handlers for signature errors, malformed tokens, etc.
+    @ExceptionHandler(io.jsonwebtoken.SignatureException.class)
+    public ResponseEntity<String> handleSignatureException(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Invalid token signature.");
+    }
+
+
     }
