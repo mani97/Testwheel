@@ -5,6 +5,7 @@ import com.aishu.spring_security.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
@@ -51,7 +52,30 @@ public class JwtStoreService {
     }
 
 
+    public String findRefreshTokenByUser(String userName) {
+        if (userName == null) return null;
+        List<Token> tokens = tokenRepository.findByUsername(userName);
+        return tokens.stream()
+                .filter(t -> !t.isRevoked() && "refresh".equals(t.getTokenType()))
+                .map(Token::getTokenValue)
+                .findFirst()
+                .orElse(null);
+    }
 
-
-
+    public void findstoreRefreshToken(String userName, String newRefreshToken, LocalDateTime localDateTime) {
+        if (userName == null) return;
+        List<Token> tokens = tokenRepository.findByUsername(userName);
+        Token token;
+        if (!tokens.isEmpty()) {
+            token = tokens.get(0);
+        } else {
+            token = new Token();
+        }
+        token.setUsername(userName);
+        token.setTokenValue(newRefreshToken);
+        token.setTokenType("refresh");
+        token.setExpiresAt(localDateTime);
+        token.setRevoked(false);
+        tokenRepository.save(token);
+    }
 }

@@ -72,8 +72,8 @@
 
             <div class="px-2 p-t-12 p-b-24"><a
                     class="btn btn-create p-tb-12 p-lr-16 text-white d-md-block d-none button-f2" data-bs-toggle="modal"
-                    data-bs-target="#createProject"><img
-                    th:src="@{/assets/images/create-test-icon.svg}" alt="Icon" class="pe-2" th:href="@{/createproject}">Create Project</a></div>
+                    data-bs-target="#createProject" th:href="@{/createproject}"><img
+                    th:src="@{/assets/images/create-test-icon.svg}" alt="Icon" class="pe-2">Create Project</a></div>
           </div>
 
         </div>
@@ -216,7 +216,7 @@
             </ul>
           </div>
             <div class="py-3 px-sm-2"><a class="btn btn-create p-tb-12 p-lr-16 text-white button-f2"
-                                       data-bs-toggle="modal" data-bs-target="createProject" ><img
+                                       data-bs-toggle="modal" data-bs-target="#createProject" th:href="@{/createproject}" ><img
                   th:src="@{/assets/images/create-test-icon.svg}" alt="Icon" class="pe-2">Create Project</a>
             </div>
             </div>

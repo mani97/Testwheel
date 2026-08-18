@@ -1,6 +1,5 @@
-package com.aishu.spring_security.config;
+package com.intern.intern.app.config;
 
-import com.aishu.spring_security.config.JwtFilter;
 import com.aishu.spring_security.service.CookieUtil;
 import com.aishu.spring_security.service.JwtStoreService;
 import jakarta.servlet.http.Cookie;
@@ -10,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -44,21 +42,21 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http    //.csrf(AbstractHttpConfigurer::disable)   // disable CSRF
+        http    .csrf(AbstractHttpConfigurer::disable)   // disable CSRF
 
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/welcome","/testwheel", "/login", "/signup", "/dashboard","/verify-otp",
-                                        "/assets/**", "/css/**", "/js/**","/createtest2","/forgot-password-phone",
-                                        "/images/**","/fontawesome/**","/fonts/**","/timeout","/timeout",
-                                        "/","/perform_logout","/perform_login").permitAll()
-                                .anyRequest().authenticated()
-                        // .permitAll()
+                         .requestMatchers("/welcome","/testwheel", "/login", "/signup", "/dashboard","/verify-otp",
+                         "/assets/**", "/css/**", "/js/**","/saveWizard","/createproject","/createtest2","/forgot-password-phone",
+                         "/images/**","/fontawesome/**","/fonts/**","/welcome-loading","/timeout",
+                         "/","/perform_logout","/perform_login").permitAll()
+                        .anyRequest().authenticated()
+                // .permitAll()
                 )
                 // Form login
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/perform_login")
-                        .defaultSuccessUrl("/dashboard", true)    // redirect after success
+                        //.loginProcessingUrl("/perform_login")
+                        //.defaultSuccessUrl("/dashboard", true)    // redirect after success
                         .failureUrl("/login?error=true")          // redirect on failure
                         .permitAll()
                         .failureHandler((request, response, exception) -> {
@@ -77,21 +75,21 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID", "accessToken")  // clear cookies
                         .invalidateHttpSession(true)                 // invalidate session
                         .permitAll()
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            // Custom JWT revocation logic
-                            Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
-                            if (refreshCookie != null) {
-                                String refreshToken = refreshCookie.getValue();
-                                jwtStoreService.revokeAllTokensForUser(refreshToken); // mark revoked
-                            }
-                            response.sendRedirect("/login?logout=true");
-                        }))
-                // Session +
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .invalidSessionUrl("/timeout")
-                        .maximumSessions(1) // restrict concurrent logins per user
-                        .expiredUrl("/timeout"))
-                .csrf(Customizer.withDefaults()) //      Enable CSRF protection
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    // Custom JWT revocation logic
+                    Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
+                    if (refreshCookie != null) {
+                        String refreshToken = refreshCookie.getValue();
+                        jwtStoreService.revokeAllTokensForUser(refreshToken); // mark revoked
+                    }
+                    response.sendRedirect("/login?logout=true");
+                }))
+                // Session + JWT
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                        .invalidSessionUrl("/timeout")
+//                        .maximumSessions(1) // restrict concurrent logins per user
+//                        .expiredUrl("/timeout"))
+                //.csrf(Customizer.withDefaults()) //      Enable CSRF protection
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
