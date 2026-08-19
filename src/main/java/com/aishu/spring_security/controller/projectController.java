@@ -38,12 +38,24 @@ public class projectController {
     @GetMapping("/createproject")
     public String createProject(Model model) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return "redirect:/login?unauthorized";
+        }
+
         model.addAttribute("project",new Project());
         return "create-project";
     }
 
     @PostMapping("/saveproject")
     public String saveProject(@ModelAttribute("project") Project project, Model model, RedirectAttributes redirectAttributes,Authentication authentication,@ModelAttribute("currentUser") User currentUser) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return "redirect:/login?unauthorized";
+        }
 
             // Inject global model attribute into entity
             project.setCreatedBy(currentUser.getFirstName());
@@ -57,6 +69,13 @@ public class projectController {
 
     @GetMapping("/projects")
     public String getProjects(Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return "redirect:/login?unauthorized";
+        }
+
         List<Project> projects = projectRepo.findAll();
         model.addAttribute("projects", projects);
 //        return "projectDropdown::dashboard";

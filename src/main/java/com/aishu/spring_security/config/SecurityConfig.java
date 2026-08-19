@@ -1,42 +1,31 @@
 package com.aishu.spring_security.config;
 
-import com.aishu.spring_security.service.CookieUtil;
-import com.aishu.spring_security.service.JwtStoreService;
-import jakarta.servlet.http.Cookie;
+import com.aishu.spring_security.config.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtFilter jwtFilter;
-
-    @Autowired
-    private JwtStoreService jwtStoreService;
 
     @Bean
     public AuthenticationProvider authProvider() {
@@ -49,48 +38,18 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-
+                .csrf(AbstractHttpConfigurer::disable)   // 🔹 Disable CSRF
                 .authorizeHttpRequests(auth -> auth
-                         .requestMatchers("/welcome","/testwheel", "/login", "/signup", "/dashboard","/verify-otp",
-                         "/assets/**", "/css/**", "/js/**","/saveWizard","/createproject","/createtest2","/forgot-password-phone",
-                         "/images/**","/fontawesome/**","/fonts/**","/welcome-loading",
-                         "/","/perform_logout","/perform_login").permitAll()
+                        .requestMatchers("/login","/", "/signup", "/welcome",
+                                "/welcome-loading", "/assets/**", "/css/**", "/js/**",
+                                "/images/**", "/fonts/**", "/perform_login",
+                                "/perform_logout","/saveWizard","/forgot-password-phone").permitAll()
                         .anyRequest().authenticated()
-                // .permitAll()
                 )
-                // Form login
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        //.loginProcessingUrl("/perform_login")
-                        .defaultSuccessUrl("/dashboard", true)    // redirect after success
-                        .failureUrl("/login?error=true")          // redirect on failure
-                        .permitAll()
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 🔹 Stateless sessions
                 )
-                // OAuth2 login
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true))
-                // Logout
-                .logout(logout -> logout
-                        .logoutUrl("/logout")                // custom logout URL
-                        .logoutSuccessUrl("/login?logout=true")      // redirect after logout
-                        .deleteCookies("JSESSIONID", "accessToken")  // clear cookies
-                        .invalidateHttpSession(true)                 // invalidate session
-                        .permitAll()
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    // Custom JWT revocation logic
-                    Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
-                    if (refreshCookie != null) {
-                        String refreshToken = refreshCookie.getValue();
-                        jwtStoreService.revokeAllTokensForUser(refreshToken); // mark revoked
-                    }
-                    response.sendRedirect("/login?logout=true");
-                }))
-                // Session + JWT
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .maximumSessions(1) )// restrict concurrent logins per user
-                .csrf(Customizer.withDefaults()) //      Enable CSRF protection
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // 🔹 JWT filter
 
         return http.build();
     }
@@ -99,6 +58,4 @@ public class SecurityConfig{
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
-
 }

@@ -31,8 +31,8 @@ public class UserController {
 
     private static final Logger logger = LogManager.getLogger(UserController.class);
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+//    @Autowired
+//    private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     private UserService userService;
@@ -86,7 +86,7 @@ public class UserController {
             notificationRepository.save(note);
 
             // Push notification to admin channel
-            messagingTemplate.convertAndSend("/topic/adminNotifications", note);
+            //messagingTemplate.convertAndSend("/topic/adminNotifications", note);
 
 //            model.addAttribute("signupSuccess", "User created successfully!");
 //            return "signup"; // not redirect
@@ -110,7 +110,7 @@ public class UserController {
     }
 
     @PostMapping("/perform_login")
-    public String login(@ModelAttribute("user") User user, Model model, HttpServletResponse response) {
+    public String login(@ModelAttribute("user") User user, Model model, HttpServletResponse response,RedirectAttributes redirectAttributes) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
@@ -129,14 +129,14 @@ public class UserController {
             jwtStoreService.storeToken(user.getUsername(), accessToken);
 
             response.addCookie(CookieUtil.createAccessTokenCookie(accessToken));
-            //response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken));
+            response.addCookie(CookieUtil.createRefreshTokenCookie(refreshToken));
 
             System.out.println("login success");
 
             return "redirect:/dashboard";
         } else {
-            model.addAttribute("present", true);
-            model.addAttribute("message", "Invalid Username or Password!");
+            redirectAttributes.addFlashAttribute("present", true);
+            redirectAttributes.addFlashAttribute("message", "Invalid Username or Password!");
             return "redirect:/login";
         }
     }

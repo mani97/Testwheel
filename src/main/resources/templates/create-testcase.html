@@ -6,8 +6,8 @@
     </title>
     <meta charset="utf-8">
 
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<!--    <meta name="_csrf" th:content="${_csrf.token}" />-->
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}" />-->
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -639,8 +639,7 @@
     <script>
         function submitBothForms() {
 
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+        const token = localStorage.getItem("accessToken");
 
             // Collect Form 1 & Form 2 inputs safely
             const testName = document.getElementById('productName')?.value || document.querySelector('[name="testName"]')?.value || '';
@@ -666,7 +665,7 @@
                 method: 'POST',
                 headers: {
 
-                    [csrfHeader]:csrfToken,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: params,

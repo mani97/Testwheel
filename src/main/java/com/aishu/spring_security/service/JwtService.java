@@ -51,7 +51,7 @@ public class JwtService {
     public String generateAccessToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
-        long expirationMillis = 15 * 60 * 1000; // 15 minutes
+        long expirationMillis = 1 * 60 * 1000; // 1 minutes
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMillis);
 

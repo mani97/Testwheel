@@ -37,17 +37,17 @@ public class dashboardController {
     }
 
 
-    @GetMapping("/welcome")
+    @GetMapping("/welcome-loading")
     public String allTest(Model model) {
 
         // model.addAttribute("listEmployee",employeeService.getAllEmployee());
         return "welcome-loading";
     }
 
-    @GetMapping("/testwheel")
+    @GetMapping("/welcome")
     public String TestWheel(Model model) {
 
-        // model.addAttribute("listEmployee",employeeService.getAllEmployee());
+        //model.addAttribute("listEmployee",employeeService.getAllEmployee());
         return "welcome";
     }
 

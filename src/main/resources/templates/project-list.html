@@ -72,9 +72,14 @@
                             <li class="py-2 mb-3 px-2"><a class="dropdown-item dmsans-semibold text-color1"
                                     href="#"><img src="assets/images/help-support-icon.svg" alt="Help & Support"
                                         class="pe-3" />Help & Support</a></li>
-                            <li class="brdr-top-1 py-3 px-2"><a class="dropdown-item text-color8 dmsans-semibold"
-                                    th:href="@{/perform_logout}"><img src="assets/images/logout-icon.svg" alt="Sign Out" class="pe-3" />Sign
-                                    Out</a></li>
+                            <li class="brdr-top-1 py-3 px-2">
+                                <form th:action="@{/perform_logout}" method="post" style="display:inline;">
+                                    <button type="submit" class="dropdown-item text-color8 dmsans-semibold">
+                                        <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />
+                                        Sign Out
+                                    </button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </div>

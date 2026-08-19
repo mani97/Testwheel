@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -127,24 +128,34 @@ public String profile(HttpServletRequest request,Model model, Authentication aut
 
 
     // ---- Logout (redirect) ----
-//    @GetMapping("/perform_logout")
-//    public String logout(HttpServletRequest request,HttpServletResponse response,Model model) {
-//        Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
-//        if (refreshCookie != null) {
-//            String refreshToken = refreshCookie.getValue();
-//            String username = jwtService.extractUsername(refreshToken);
-//
-//            // Invalidate tokens
-//            jwtStoreService.revokeToken(refreshToken); // mark revoked instead of delete
-//            //jwtStoreService.removeToken(username);
-//        }
-//        // Clear cookies
-//        response.addCookie(CookieUtil.deleteCookie("accessToken"));
-//        response.addCookie(CookieUtil.deleteCookie("refreshToken"));
-//        response.addCookie(CookieUtil.deleteCookie("jwt"));
-//
-//        // Show logout page
-//        model.addAttribute("message", "You have been logged out successfully.");
-//        return "redirect:/login?logout";
-//    }
+    @PostMapping("/perform_logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return "redirect:/login?unauthorized";
+        }
+
+        Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
+        if (refreshCookie != null) {
+            String refreshToken = refreshCookie.getValue();
+            try {
+                String username = jwtService.extractUsername(refreshToken);
+                if (username != null) {
+                    jwtStoreService.revokeAllTokensForUser(username);
+                }
+            } catch (Exception e) {
+                // ignore if token invalid
+            }
+        }
+        // Clear cookies
+        response.addCookie(CookieUtil.deleteCookie("accessToken"));
+        response.addCookie(CookieUtil.deleteCookie("refreshToken"));
+        response.addCookie(CookieUtil.deleteCookie("jwt"));
+
+        // Show logout page
+        model.addAttribute("message", "You have been logged out successfully.");
+        return "redirect:/login?logout";
+    }
 }

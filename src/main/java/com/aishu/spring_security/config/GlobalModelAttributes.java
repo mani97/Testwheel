@@ -27,11 +27,11 @@ public class GlobalModelAttributes {
                 if (user != null) {
                     model.addAttribute("currentUser", user);
 
-                    // Add first letter of username
                     String firstLetter = user.getUsername() != null && !user.getUsername().isEmpty()
                             ? user.getUsername().substring(0, 1).toUpperCase()
                             : "?";
                     model.addAttribute("firstLetter", firstLetter);
+                    return user;
                 }
             }
         }

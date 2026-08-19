@@ -124,10 +124,15 @@
                             th:src="@{assets/images/help-support-icon.svg}" alt="Help & Support"
                             class="pe-3" />Help &
                         Support</a></li>
-                    <li class="brdr-top-1 py-3 px-2"><a class="dropdown-item text-color8 dmsans-semibold"
-                                                        href="#"><img th:src="@{assets/images/logout-icon.svg}" alt="Sign Out"
-                                                                      class="pe-3" />Sign
-                        Out</a></li>
+                    <li class="brdr-top-1 py-3 px-2">
+                        <form th:action="@{/perform_logout}" method="post" style="display:inline;">
+                            <button type="submit" class="dropdown-item text-color8 dmsans-semibold">
+                                <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />
+                                Sign Out
+                            </button>
+                        </form>
+
+                    </li>
                 </ul>
             </div>
         </div>
@@ -231,7 +236,7 @@
 <div class="content" id="content">
 </div>
 <form th:action="@{/saveproject}" th:object="${project}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+<!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
 
     <div class="modal fade" id="createProject" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">

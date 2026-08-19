@@ -8,8 +8,8 @@
   </title>
   <meta charset="utf-8">
 
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<!--    <meta name="_csrf" th:content="${_csrf.token}" />-->
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}" />-->
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -338,8 +338,8 @@ progress.forEach((bar, index) => {
 
 <script>
 
-    const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+<!--    const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");-->
+<!--    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");-->
 
 
     let wizardData = {
@@ -419,14 +419,14 @@ showStep(currentStep+1);
       fetch('/saveWizard', {
         method: 'POST',
         headers: {
-        [header]:token,
+<!--        [header]:token,-->
          'Content-Type': 'application/json' },
         body: JSON.stringify(wizardData)
       })
       .then(res => res.json())
       .then(data => {
         console.log("Saved:", data);
-        window.location.href = "/welcome";
+        window.location.href = "/welcome-loading";
       })
       .catch(err => console.error("Error:", err));
     });

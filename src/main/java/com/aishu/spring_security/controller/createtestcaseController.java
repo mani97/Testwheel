@@ -8,11 +8,11 @@ import com.aishu.spring_security.model.ApkUpload;
 import com.aishu.spring_security.model.TestEntity;
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +37,13 @@ public class createtestcaseController {
 
     @GetMapping("/alltest")
     public String createTest(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return "redirect:/login?unauthorized";
+        }
+
+
 
         model.addAttribute("testEntity", new TestEntity());
 
@@ -45,11 +52,13 @@ public class createtestcaseController {
 
 
         @PostMapping("/createtest")
-        public String createTestCase(@ModelAttribute("testEntity") TestEntity testEntity,
-                                     BindingResult result, Model model) {
-//            if (result.hasErrors()) {
-//                return "create-testcase"; // redisplay form with errors
-//            }
+        public String createTestCase(@ModelAttribute("testEntity") TestEntity testEntity, Model model) {
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+                return "redirect:/login?unauthorized";
+            }
             testRepository.save(testEntity);
             // After saving, redirect to test list page
             return "redirect:/alltest";

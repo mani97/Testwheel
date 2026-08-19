@@ -2,6 +2,7 @@ package com.aishu.spring_security.config;
 
 import com.aishu.spring_security.service.CookieUtil;
 import com.aishu.spring_security.service.JwtService;
+import com.aishu.spring_security.service.JwtStoreService;
 import com.aishu.spring_security.service.MyUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -27,6 +30,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     ApplicationContext context;
+
+    @Autowired
+    JwtStoreService jwtStoreService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -64,18 +70,31 @@ public class JwtFilter extends OncePerRequestFilter {
             Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
             if (refreshCookie != null) {
                 String refreshToken = refreshCookie.getValue();
-                if (!jwtService.isTokenExpired(refreshToken) && "refresh".equals(jwtService.getTokenType(refreshToken))) {
+                if (refreshToken != null && !jwtService.isTokenExpired(refreshToken)
+                        && "refresh".equals(jwtService.getTokenType(refreshToken))) {
                     try {
-                        userName = jwtService.extractUserName(refreshToken);
-                        String newAccessToken = jwtService.generateAccessToken(userName);
-                        response.addCookie(CookieUtil.createAccessTokenCookie(newAccessToken));
-                        token = newAccessToken;
+                        String refUserName = jwtService.extractUserName(refreshToken);
+                        if (refUserName != null) {
+                            // 1. Generate new access token
+                            String newAccessToken = jwtService.generateAccessToken(refUserName);
+                            // 2. Generate new refresh token (rotation)
+                            String newRefreshToken = jwtService.generateRefreshToken(refUserName);
+                            // 3. Store new refresh token in DB with expiry
+                            jwtStoreService.findstoreRefreshToken(refUserName, newRefreshToken,
+                                    LocalDateTime.now().plusDays(7));
+                            // 4. Update cookies
+                            response.addCookie(CookieUtil.createAccessTokenCookie(newAccessToken));
+                            response.addCookie(CookieUtil.createRefreshTokenCookie(newRefreshToken));
+                            token = newAccessToken;
+                            userName = refUserName;
+                        }
                     } catch (Exception e) {
                         userName = null;
                     }
                 }
             }
         }
+
 
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = context.getBean(MyUserDetailService.class).loadUserByUsername(userName);
@@ -89,5 +108,19 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
+    private String getCookieValue(HttpServletRequest request, String name) {
+        if (request.getCookies() == null) return null;
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> name.equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+
+
+
+
 }
 
