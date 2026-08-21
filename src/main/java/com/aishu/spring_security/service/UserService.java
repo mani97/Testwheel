@@ -14,8 +14,6 @@ public class UserService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder; // BCryptPasswordEncoder bean
 
     public User saveUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));

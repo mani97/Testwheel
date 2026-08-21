@@ -39,11 +39,11 @@ public class authController {
     @GetMapping("/login")
     public String login(Model model) throws IOException {
         // Load country prefix JSON from Samayo
-//        ObjectMapper mapper = new ObjectMapper();
-//        List<Map<String, Object>> countries = mapper.readValue(
-//                new URL("https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-calling-code.json"),
-//                new TypeReference<List<Map<String, Object>>>() {});
-//        model.addAttribute("countries", countries);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, Object>> countries = mapper.readValue(
+                new URL("https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-calling-code.json"),
+                new TypeReference<List<Map<String, Object>>>() {});
+        model.addAttribute("countries", countries);
         model.addAttribute("user", new User()); // must match th:object="${user}"
         return "tw-login";
     }
@@ -59,19 +59,6 @@ public class authController {
         model.addAttribute("user", new User());
         return "tw-signup";
     }
-
-//    // Send current authenticated user details
-//    @GetMapping("/dashboard")
-//    public String profile(Model model, Authentication authentication) {
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            String username = authentication.getName();
-//            model.addAttribute("username", username.substring(0,1));
-////            UserPrinciple userDetails = (UserPrinciple) authentication.getPrincipal();
-////            model.addAttribute("username", userDetails.getUsername());
-////            model.addAttribute("firstLetter", userDetails.getUsername().substring(0, 1));
-//        }
-//        return "dashboard";
-//    }
 
 @GetMapping("/dashboard")
 public String profile(HttpServletRequest request,Model model, Authentication authentication) {
@@ -102,14 +89,6 @@ public String profile(HttpServletRequest request,Model model, Authentication aut
             String name    = oauthUser.getAttribute("name");
             String email   = oauthUser.getAttribute("email");
             String picture = oauthUser.getAttribute("picture");
-
-//            String oauthId = oauthUser.getAttribute("sub");
-//            userDetails.put("username", oauthUser.getAttribute("name"));       // profile scope
-//            userDetails.put("email", oauthUser.getAttribute("email"));         // email scope
-//            userDetails.put("picture", oauthUser.getAttribute("picture")) ;     // profile scope
-//            return userDetails;    // requires profile scope
-
-
 
             model.addAttribute("name", name != null ? name : "Unknown User");
             model.addAttribute("email", email != null ? email : "No Email");

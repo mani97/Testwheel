@@ -47,9 +47,7 @@ public class createtestcaseController {
         @PostMapping("/createtest")
         public String createTestCase(@ModelAttribute("testEntity") TestEntity testEntity,
                                      BindingResult result, Model model) {
-//            if (result.hasErrors()) {
-//                return "create-testcase"; // redisplay form with errors
-//            }
+
             testRepository.save(testEntity);
             // After saving, redirect to test list page
             return "redirect:/alltest";

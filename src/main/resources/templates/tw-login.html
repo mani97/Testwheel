@@ -62,7 +62,7 @@
                                     <div class="col-md-12 m-b-24">
                                         <label class="form-label label-fnt dmsans-medium">Business email*</label>
                                         <input type="email" th:field="*{username}" class="form-control input-bg"
-                                            placeholder="ex. email@domain.com" required>
+                                            placeholder="ex. email@domain.com" >
                                     </div>
                                 </div>
 
@@ -71,8 +71,13 @@
                                         <label class="form-label label-fnt dmsans-medium">Phone number</label>
                                         <div class="input-group bg-color1">
                                             <select class="form-select form-select-bg">
-                                                <option>+91
+
+                                                <option th:each="c : ${countries}"
+                                                        th:value="${'+' + c.calling_code}"
+                                                        th:text="${c.country + ' (+' + c.calling_code + ')'}"
+                                                        th:selected="${c.calling_code == 91}">
                                                 </option>
+
                                             </select>
                                             <span class="align-self-center color-input"> | </span>
                                             <input type="text" th:field="*{phone}"
@@ -86,12 +91,27 @@
                                     <div class="col-md-12 m-b-24">
                                         <label class="form-label label-fnt dmsans-medium">Password*</label>
                                         <div class="input-group bg-color1">
-                                            <input type="password" th:field="*{password}" class="form-control input-bg"
+                                            <input type="password" id="passwordField" th:field="*{password}" class="form-control input-bg"
                                                 placeholder="Enter Password">
-                                            <i class="fa-solid toggle-password-eye text-color1 fa-eye"></i>
+                                            <i class="fa-solid toggle-password-eye text-color1 fa-eye" id="togglePassword"></i>
                                         </div>
                                     </div>
                                 </div>
+
+                                <script>
+                                    const togglePassword = document.getElementById("togglePassword");
+                                    const passwordField = document.getElementById("passwordField");
+
+                                    togglePassword.addEventListener("click", function () {
+                                      // Switch input type
+                                      const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+                                      passwordField.setAttribute("type", type);
+
+                                      // Toggle eye / eye-slash icon
+                                      this.classList.toggle("fa-eye");
+                                      this.classList.toggle("fa-eye-slash");
+                                    });
+                                </script>
 
 
 <!--                                <div th:if="${session.signupSuccess}" class="alert alert-success">-->

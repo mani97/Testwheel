@@ -20,23 +20,6 @@ import java.util.Map;
 public class dashboardController {
 
 
-//    @GetMapping("/reset-password")
-//    public String showresetPage(Model model) {
-//        return "reset-password";
-//    }
-
-    @GetMapping("/reg")
-    public String register(Model model) throws IOException {
-//        ObjectMapper mapper = new ObjectMapper();
-//        List<Map<String, Object>> countries = mapper.readValue(
-//                new URL("https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-calling-code.json"),
-//                new TypeReference<List<Map<String, Object>>>() {}
-//        );
-//        model.addAttribute("countries", countries);
-        return "register";
-    }
-
-
     @GetMapping("/welcome")
     public String allTest(Model model) {
 
@@ -57,9 +40,6 @@ public class dashboardController {
         // model.addAttribute("listEmployee",employeeService.getAllEmployee());
         return "layout";
     }
-
-
-
 
 
     @GetMapping("/createtest2")

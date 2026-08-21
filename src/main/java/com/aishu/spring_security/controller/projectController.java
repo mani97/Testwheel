@@ -51,7 +51,7 @@ public class projectController {
 
         Project saved = projectRepo.save(project); // persist entity
         redirectAttributes.addFlashAttribute("successMessage", "Project saved successfully!");
-        return "redirect:/createproject"; // reload same view
+        return "redirect:/alltest"; // reload same view
     }
 
 

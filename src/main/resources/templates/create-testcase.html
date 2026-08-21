@@ -11,6 +11,7 @@
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link th:href="@{assets/css/common-styles.css}" rel="stylesheet">
     <link th:href="@{assets/css/login-styles.css}" rel="stylesheet">
     <link th:href="@{assets/css/after-login-styles.css}" rel="stylesheet">
@@ -59,7 +60,7 @@
         </div>
 
         <div class="d-flex align-items-center gap-4">
-            <a class="btn btn-create p-tb-12 p-lr-16 text-white d-md-block d-none button-f2"><img th:src="@{/assets/images/create-test-icon.svg}" alt="Icon" class="pe-2" /> Create Test</a>
+            <a th:href="@{/alltest}" class="btn btn-create p-tb-12 p-lr-16 text-white d-md-block d-none button-f2"><img th:src="@{/assets/images/create-test-icon.svg}" alt="Icon" class="pe-2" /> Create Test</a>
 
 
             <div class="dropdown">
@@ -99,8 +100,14 @@
                         <li class="pb-2 mt-3 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img th:src="@{assets/images/profile-icon.svg}" alt="View Profile" class="pe-3" />View Profile</a></li>
                         <li class="py-2 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img th:src="@{assets/images/setting-icon.svg}" alt="Account Settings" class="pe-3" />Account Settings</a></li>
                         <li class="py-2 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img th:src="@{assets/images/billing-icon.svg}" alt="Billing & Plans" class="pe-3" />Billing & Plans</a></li>
-                        <li class="py-2 mb-3 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img th:src="@{assets/images/help-support-icon.svg}" alt="Help & Support" class="pe-3" />Help & Support</a></li>
-                        <li class="brdr-top-1 py-3 px-2"><a class="dropdown-item text-color8 dmsans-semibold" th:href="@{/perform_logout}"><img th:src="@{assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />Sign Out</a></li>
+                        <li class="py-2 mb-3 px-2">
+                            <form th:action="@{/logout}" method="post" style="display:inline;">
+                                <button type="submit" class="dropdown-item text-color8 dmsans-semibold">
+                                    <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />
+                                    Sign Out
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -217,6 +224,24 @@
                     </div>
                 </div>
             </div>
+
+            <div th:if="${successMessage}" class="alert alert-success">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <script>
+                window.addEventListener('DOMContentLoaded', function() {
+                  const alertBox = document.getElementById("successAlert");
+                  if (alertBox) {
+                    setTimeout(function() {
+                      alertBox.style.transition = "opacity 0.5s ease";
+                      alertBox.style.opacity = "0";
+                      setTimeout(function() { alertBox.style.display = "none"; }, 500);
+                    }, 3000); // 3 seconds
+                  }
+                });
+            </script>
+
+
             <div class="content-center-tb m-t-36">
                 <div class="row justify-content-center">
                     <div class="col-lg-auto col-md-9">

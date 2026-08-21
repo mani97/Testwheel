@@ -50,7 +50,7 @@ public class SecurityConfig {
                                 .requestMatchers("/welcome","/testwheel", "/login", "/signup", "/dashboard","/verify-otp",
                                         "/assets/**", "/css/**", "/js/**","/createtest2","/forgot-password-phone",
                                         "/images/**","/fontawesome/**","/fonts/**","/timeout","/timeout",
-                                        "/","/perform_logout","/perform_login").permitAll()
+                                        "/","/perform_logout","/perform_login","/saveWizard","/favicon.png","/createtest-2").permitAll()
                                 .anyRequest().authenticated()
                         // .permitAll()
                 )

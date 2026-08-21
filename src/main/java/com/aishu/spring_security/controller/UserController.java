@@ -85,12 +85,6 @@ public class UserController {
             note.setTimeAgo(LocalDateTime.now()); // later you can calculate dynamically
             notificationRepository.save(note);
 
-            // Push notification to admin channel
-            //messagingTemplate.convertAndSend("/topic/adminNotifications", note);
-
-//            model.addAttribute("signupSuccess", "User created successfully!");
-//            return "signup"; // not redirect
-
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("message", "User " + user.getUsername() + " created successfully! Please login.");
             return "redirect:/login";
