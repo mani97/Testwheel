@@ -44,7 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http    //.csrf(AbstractHttpConfigurer::disable)   // disable CSRF
+        http    .csrf(AbstractHttpConfigurer::disable)   // disable CSRF
 
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/welcome","/testwheel", "/login", "/signup", "/dashboard","/verify-otp",
@@ -91,7 +91,7 @@ public class SecurityConfig {
                         .invalidSessionUrl("/timeout")
                         .maximumSessions(1) // restrict concurrent logins per user
                         .expiredUrl("/timeout"))
-                .csrf(Customizer.withDefaults()) //      Enable CSRF protection
+                //.csrf(Customizer.withDefaults()) //      Enable CSRF protection
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
