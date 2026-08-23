@@ -44,10 +44,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http    //.csrf(AbstractHttpConfigurer::disable)   // disable CSRF
+        http //.csrf(AbstractHttpConfigurer::disable)   // disable CSRF
 
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/welcome","/testwheel", "/login", "/signup", "/dashboard","/verify-otp",
+                                .requestMatchers("/welcome","/testwheel", "/login", "/signup","/verify-otp",
                                         "/assets/**", "/css/**", "/js/**","/createtest2","/forgot-password-phone",
                                         "/images/**","/fontawesome/**","/fonts/**","/timeout","/timeout",
                                         "/","/perform_logout","/perform_login","/saveWizard","/favicon.png","/createtest-2").permitAll()
@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")
-                        .defaultSuccessUrl("/dashboard", true)    // redirect after success
+                        //.defaultSuccessUrl("/dashboard", true)    // redirect after success
                         .failureUrl("/login?error=true")          // redirect on failure
                         .permitAll()
                         .failureHandler((request, response, exception) -> {
@@ -78,12 +78,6 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)                 // invalidate session
                         .permitAll()
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            // Custom JWT revocation logic
-                            Cookie refreshCookie = CookieUtil.getCookie(request, "refreshToken");
-                            if (refreshCookie != null) {
-                                String refreshToken = refreshCookie.getValue();
-                                jwtStoreService.revokeAllTokensForUser(refreshToken); // mark revoked
-                            }
                             response.sendRedirect("/login?logout=true");
                         }))
                 // Session +
@@ -91,8 +85,8 @@ public class SecurityConfig {
                         .invalidSessionUrl("/timeout")
                         .maximumSessions(1) // restrict concurrent logins per user
                         .expiredUrl("/timeout"))
-                .csrf(Customizer.withDefaults()) //      Enable CSRF protection
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(Customizer.withDefaults()); //      Enable CSRF protection
+                //.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
