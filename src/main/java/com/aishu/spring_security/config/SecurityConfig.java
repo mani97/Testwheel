@@ -14,6 +14,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,10 +48,11 @@ public class SecurityConfig {
         http //.csrf(AbstractHttpConfigurer::disable)   // disable CSRF
 
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/welcome","/testwheel", "/login", "/signup","/verify-otp",
+                                .requestMatchers(
+                                        "/favicon.png","/welcome","/testwheel", "/login", "/signup","/verify-otp",
                                         "/assets/**", "/css/**", "/js/**","/createtest2","/forgot-password-phone",
                                         "/images/**","/fontawesome/**","/fonts/**","/timeout","/timeout",
-                                        "/","/perform_logout","/perform_login","/saveWizard","/favicon.png","/createtest-2").permitAll()
+                                        "/","/perform_login","/saveWizard","/favicon.png","/createtest-2").permitAll()
                                 .anyRequest().authenticated()
                         // .permitAll()
                 )
@@ -58,7 +60,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")
-                        //.defaultSuccessUrl("/dashboard", true)    // redirect after success
+                        .defaultSuccessUrl("/dashboard", true)    // redirect after success
                         .failureUrl("/login?error=true")          // redirect on failure
                         .permitAll()
                         .failureHandler((request, response, exception) -> {

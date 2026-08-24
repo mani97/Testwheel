@@ -31,6 +31,8 @@ public class TestEntity {
 
     private boolean backendApiTest;
 
+   // private String apk;
+
     private String APIprotocol;
 
     // Relationship with ApkUpload entity

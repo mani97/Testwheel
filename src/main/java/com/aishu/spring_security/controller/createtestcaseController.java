@@ -8,7 +8,7 @@ import com.aishu.spring_security.model.ApkUpload;
 import com.aishu.spring_security.model.TestEntity;
 
 
-
+import net.dongliu.apk.parser.ApkParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +44,7 @@ public class createtestcaseController {
     }
 
 
-        @PostMapping("/createtest")
+        @PostMapping("/createtest1")
         public String createTestCase(@ModelAttribute("testEntity") TestEntity testEntity,
                                      BindingResult result, Model model) {
 
@@ -53,42 +53,46 @@ public class createtestcaseController {
             return "redirect:/alltest";
         }
 
-    @PostMapping("/uploadApk")
-    public String uploadApk(@RequestParam("file") MultipartFile file,
-                            @RequestParam("testId") int testId) throws IOException {
-        TestEntity test = testRepository.findById(testId).orElseThrow();
 
-        // Save file to disk
-        String uploadDir = "uploads/apk/";
-        Path path = Paths.get(uploadDir + file.getOriginalFilename());
-        Files.createDirectories(path.getParent());
-        Files.write(path, file.getBytes());
+    @PostMapping("/createtest")
+    public String createTest(@ModelAttribute TestEntity testEntity,
+                             @RequestParam(value="apk", required=false) MultipartFile apkFile) throws IOException {
+        // Save TestEntity to DB
+        testRepository.save(testEntity);
 
-        // Parse APK metadata
-        try (ApkFile apkFile = new ApkFile(path.toFile())) {
-            ApkMeta meta = apkFile.getApkMeta();
+        // Handle APK file
+        if (!apkFile.isEmpty()) {
+            Path path = Paths.get("uploads/" + apkFile.getOriginalFilename());
+            Files.createDirectories(path.getParent());
+            Files.write(path, apkFile.getBytes());
 
-            ApkUpload apk = new ApkUpload();
-            apk.setFileName(file.getOriginalFilename());
-            apk.setFilePath(path.toString());
-            apk.setFileSize(file.getSize());
-            apk.setUploadedAt(LocalDateTime.now());
-            apk.setTestEntity(test);
+            // Extract metadata
+            try (ApkParser apkParser = new ApkParser(path.toFile())) {
+                ApkMeta meta = apkParser.getApkMeta();
 
-            // Metadata
-            apk.setPackageName(meta.getPackageName());
-            apk.setVersionCode(meta.getVersionCode());
-            apk.setVersionName(meta.getVersionName());
-            apk.setPermissions(meta.getUsesPermissions().toString());
+                // Example: attach metadata to your entity or a separate table
+                ApkUpload apkUpload = new ApkUpload();
+                apkUpload.setFileName(apkFile.getOriginalFilename());
+                apkUpload.setFilePath(path.toString());
+                apkUpload.setFileSize(apkFile.getSize());
+                apkUpload.setUploadedAt(LocalDateTime.now());
+                apkUpload.setTestEntity(testEntity);
 
-            apkRepo.save(apk);
+                apkUpload.setPackageName(meta.getPackageName());
+                apkUpload.setVersionName(meta.getVersionName());
+                apkUpload.setVersionCode(Math.toIntExact(meta.getVersionCode()));
+                apkUpload.setPermissions(String.join(",", meta.getUsesPermissions()));
+
+                apkRepo.save(apkUpload);
+            }
         }
 
-        return "redirect:/dashboard";
+        return "redirect:/alltest";
     }
 
 
 
 
-    }
+
+}
 

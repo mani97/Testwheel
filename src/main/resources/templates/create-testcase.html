@@ -4,7 +4,9 @@
     <title>
         TestWheel - Create TestCase
     </title>
+
     <meta charset="utf-8">
+
 
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
@@ -12,6 +14,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
+    <link rel="icon" type="image/png" th:href="@{/favicon.png}">
     <link th:href="@{assets/css/common-styles.css}" rel="stylesheet">
     <link th:href="@{assets/css/login-styles.css}" rel="stylesheet">
     <link th:href="@{assets/css/after-login-styles.css}" rel="stylesheet">
@@ -404,7 +408,7 @@
                                                 </div>
                                                 <p class="mb-0 dmsans-medium text-color1 para-f4">Click to upload APK</p>
                                                 <p class="mb-0 dmsans-regular text-color4 para-f4">Supports .apk files up to 100MB</p>
-                                                <input type="file" class="form-control d-none" id="fileUpload" multiple >
+                                                <input type="file" name="apk" class="form-control d-none"  id="fileUpload" accept=".apk" multiple >
                                             </label>
                                             <div id="" class="text-color9 error-text px-0 pt-1">Upload</div>
                                         </div>
@@ -661,79 +665,139 @@
     </script>
 
 
-    <script>
-        function submitBothForms() {
+<!--    <script>-->
+<!--        function submitBothForms() {-->
 
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+<!--        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");-->
+<!--        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");-->
 
-            // Collect Form 1 & Form 2 inputs safely
-            const testName = document.getElementById('productName')?.value || document.querySelector('[name="testName"]')?.value || '';
-            const modules = document.getElementById('modules')?.value || document.querySelector('[name="modules"]')?.value || '';
-            const tag = document.getElementById('tagInput')?.value || document.querySelector('[name="tag"]')?.value || '';
-            const description = document.getElementById('description')?.value || document.querySelector('[name="description"]')?.value || '';
-            const websiteUrl = document.getElementById('websiteUrl')?.value || document.querySelector('[name="WebsiteUrl"]')?.value || '';
-            const backendApiTest = document.getElementById('backendApiTest')?.checked || false;
-            const apiProtocol = document.getElementById('APIprotocol')?.value || 'HTTP / REST';
+<!--            // Collect Form 1 & Form 2 inputs safely-->
+<!--            const testName = document.getElementById('productName')?.value || document.querySelector('[name="testName"]')?.value || '';-->
+<!--            const modules = document.getElementById('modules')?.value || document.querySelector('[name="modules"]')?.value || '';-->
+<!--            const tag = document.getElementById('tagInput')?.value || document.querySelector('[name="tag"]')?.value || '';-->
+<!--            const description = document.getElementById('description')?.value || document.querySelector('[name="description"]')?.value || '';-->
+<!--            const websiteUrl = document.getElementById('websiteUrl')?.value || document.querySelector('[name="WebsiteUrl"]')?.value || '';-->
+<!--            const backendApiTest = document.getElementById('backendApiTest')?.checked || false;-->
+<!--            const apiProtocol = document.getElementById('APIprotocol')?.value || 'HTTP / REST';-->
 
-            // Construct URLSearchParams payload for Spring @ModelAttribute binding
-            const params = new URLSearchParams();
-            params.append('testName', testName);
-            params.append('modules', modules);
-            params.append('tag', tag);
-            params.append('description', description);
-            params.append('WebsiteUrl', websiteUrl);
-            params.append('backendApiTest', backendApiTest);
-            params.append('APIprotocol', apiProtocol);
+<!--&lt;!&ndash;             // Collect file&ndash;&gt;-->
+<!--&lt;!&ndash;            const apkFile = document.getElementById('fileUpload')?.files[0];&ndash;&gt;-->
 
-            // POST to /createtest
-            fetch('/createtest', {
-                method: 'POST',
-                headers: {
+<!--            // Construct URLSearchParams payload for Spring @ModelAttribute binding-->
+<!--            const params = new URLSearchParams();-->
+<!--            params.append('testName', testName);-->
+<!--            params.append('modules', modules);-->
+<!--            params.append('tag', tag);-->
+<!--            params.append('description', description);-->
+<!--            params.append('WebsiteUrl', websiteUrl);-->
+<!--            params.append('backendApiTest', backendApiTest);-->
+<!--            params.append('APIprotocol', apiProtocol);-->
+<!--&lt;!&ndash;            if (apkFile) {&ndash;&gt;-->
+<!--&lt;!&ndash;        formData.append('apk', apkFile);&ndash;&gt;-->
+<!--    }-->
 
-                    [csrfHeader]:csrfToken,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: params,
-                credentials: 'include'
-            })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    window.location.href = '/alltest';
-                }
-            })
-            .catch(error => {
-                console.error("Fetch submission failed, submitting form natively:", error);
-                // Fallback: programmatic hidden form submission
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/createtest';
+<!--            // POST to /createtest-->
+<!--            fetch('/createtest', {-->
+<!--                method: 'POST',-->
+<!--                headers: {-->
 
-                const fields = {
-                    testName,
-                    modules,
-                    tag,
-                    description,
-                    WebsiteUrl: websiteUrl,
-                    backendApiTest,
-                    APIprotocol: apiProtocol
-                };
+<!--                    [csrfHeader]:csrfToken,-->
+<!--                    'Content-Type': 'application/x-www-form-urlencoded'-->
+<!--                },-->
+<!--                body: params,-->
+<!--                credentials: 'include'-->
+<!--            })-->
+<!--            .then(response => {-->
+<!--                if (response.redirected) {-->
+<!--                    window.location.href = response.url;-->
+<!--                } else {-->
+<!--                    window.location.href = '/alltest';-->
+<!--                }-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error("Fetch submission failed, submitting form natively:", error);-->
+<!--                // Fallback: programmatic hidden form submission-->
+<!--                const form = document.createElement('form');-->
+<!--                form.method = 'POST';-->
+<!--                form.action = '/createtest';-->
 
-                for (const [key, val] of Object.entries(fields)) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = val;
-                    form.appendChild(input);
-                }
+<!--                const fields = {-->
+<!--                    testName,-->
+<!--                    modules,-->
+<!--                    tag,-->
+<!--                    description,-->
+<!--                    WebsiteUrl: websiteUrl,-->
+<!--                    backendApiTest,-->
+<!--                    APIprotocol: apiProtocol-->
+<!--                };-->
 
-                document.body.appendChild(form);
-                form.submit();
-            });
-        }
-    </script>
+<!--                for (const [key, val] of Object.entries(fields)) {-->
+<!--                    const input = document.createElement('input');-->
+<!--                    input.type = 'hidden';-->
+<!--                    input.name = key;-->
+<!--                    input.value = val;-->
+<!--                    form.appendChild(input);-->
+<!--                }-->
+
+<!--                document.body.appendChild(form);-->
+<!--                form.submit();-->
+<!--            });-->
+<!--        }-->
+<!--    </script>-->
+
+<script>
+    function submitBothForms() {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+    // Collect inputs
+    const testName = document.getElementById('productName')?.value || '';
+    const modules = document.getElementById('modules')?.value || '';
+    const tag = document.getElementById('tagInput')?.value || '';
+    const description = document.getElementById('description')?.value || '';
+    const websiteUrl = document.getElementById('websiteUrl')?.value || '';
+    const backendApiTest = document.getElementById('backendApiTest')?.checked || false;
+    const apiProtocol = document.getElementById('APIprotocol')?.value || 'HTTP / REST';
+
+    // Collect file
+    const apkFile = document.getElementById('fileUpload')?.files[0];
+
+    // Use FormData for file + text
+    const formData = new FormData();
+    formData.append('testName', testName);
+    formData.append('modules', modules);
+    formData.append('tag', tag);
+    formData.append('description', description);
+    formData.append('WebsiteUrl', websiteUrl);
+    formData.append('backendApiTest', backendApiTest);
+    formData.append('APIprotocol', apiProtocol);
+    if (apkFile) {
+    formData.append('apk', apkFile);
+    }
+
+    // POST to /createtest
+    fetch('/createtest', {
+    method: 'POST',
+    headers: {
+    [csrfHeader]: csrfToken
+    // ⚠️ Do NOT set Content-Type manually; browser sets it with boundary
+    },
+    body: formData,
+    credentials: 'include'
+    })
+    .then(response => {
+    if (response.redirected) {
+    window.location.href = response.url;
+    } else {
+    window.location.href = '/alltest';
+    }
+    })
+    .catch(error => {
+    console.error("Upload failed:", error);
+    });
+    }
+</script>
+
 
 
     <script>
