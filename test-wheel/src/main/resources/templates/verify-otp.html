@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify OTP</title>
+</head>
+<body>
+<form th:action="@{/verify-otp}" method="post">
+    <div class="mb-3">
+        <label>Phone Number</label>
+        <input type="text" name="phone" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Enter OTP</label>
+        <input type="text" name="otp" class="form-control" required>
+    </div>
+
+    <!-- Error Alert -->
+    <div th:if="${signinError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Verify OTP</button>
+</form>
+
+
+
+</body>
+</html>

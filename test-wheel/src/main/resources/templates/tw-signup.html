@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>TestWheel - SignUp</title>
+    <link rel="icon" type="image/png" th:href="@{/favicon.png}">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Thymeleaf resource linking -->
+    <link th:href="@{/assets/css/common-styles.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/login-styles.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/fontawesome/css/all.min.css}" rel="stylesheet">
+
+    <script th:src="@{/assets/js/jquery.min.js}"></script>
+    <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+</head>
+
+<body>
+    <div class="layout">
+        <section>
+            <div class="row mx-0">
+                <!-- Left side -->
+                <div class="col-lg-6 col-xl-5 col-xxl-4 text-xl-start px-0 order-2 order-lg-1">
+                    <div class="signup-bg">
+                        <img th:src="@{/assets/images/tw-logo.svg}" alt="TestWheel Logo" height="56px"
+                            class="d-none d-lg-block">
+                        <div class="signup-txt m-t-r-92 py-5 py-xl-0">
+                            <h1 class="text-white head-h3">Start Your 14-day free trial</h1>
+                            <ul class="list-checkmark">
+                                <li class="text-white">No Credit Card Required</li>
+                                <li class="text-white">100% cloud-based<br>No installation, launchers, or browser
+                                    extensions</li>
+                                <li class="text-white">All-in-one platform<br>Web, native mobile, API, performance and
+                                    security testing</li>
+                                <li class="text-white">No-code testing<br>Author tests using AI. Test Cases written in
+                                    plain English.</li>
+                                <li class="text-white">Run multiple regression tests simultaneously</li>
+                                <li class="text-white">Auto-generated Test Summary Reports</li>
+                                <li class="text-white">Convert manual test cases to automated ones with AI</li>
+                                <li class="text-white">Reduce testing time by up to 60%</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side -->
+                <div class="col-lg-6 col-xxl-8 px-xxl-5 align-self-center py-5 order-1 order-lg-2">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-9 col-xxl-7">
+                            <h2 class="text-color1 text-center">Sign up for free today! Begin testing in minutes!</h2>
+
+                            <div class="frm-scrl">
+                                <!-- Form bound to UserSignup model -->
+                                <form id="signupForm" th:action="@{/signup}" method="post" th:object="${user}">
+                                    <div class="row">
+                                        <div class="col-md-6 m-b-24">
+                                            <label>First Name*</label>
+                                            <input type="text" th:field="*{firstName}" placeholder="Enter First Name"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6 m-b-24">
+                                            <label>Last Name*</label>
+                                            <input type="text" th:field="*{lastName}" placeholder="Enter Last Name"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 m-b-24">
+                                            <label>Email*</label>
+                                            <input type="email" th:field="*{username}"
+                                                placeholder="ex. email@domain.com" class="form-control" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 m-b-24">
+                                            <label>Phone number</label>
+                                            <input type="text" th:field="*{phone}" pattern="[0-9]{10}" title="Enter a valid 10 digit mobile Number" placeholder="Enter phone number"
+                                                class="form-control" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 m-b-24">
+                                            <label>Password*</label>
+                                            <input type="password" id="password" th:field="*{password}" placeholder="Enter Password"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 m-b-24">
+                                            <label>Confirm Password*</label>
+                                            <input type="password" id= "confirmPassword" th:field="*{confirmPassword}"
+                                                placeholder="Confirm Password" class="form-control">
+                                        </div>
+                                    </div>
+
+
+
+                                    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert"
+                                         th:text="${message}">success
+                                    </div>
+
+
+
+                                    <!-- Success Alert -->
+                                    <div th:if="${absent}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <span th:text="${message}"></span>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-12 m-b-24">
+                                            <button type="submit" class="btn btn-blue w-100">Get started free</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p class="text-center">Already have an account?
+                                                <a th:href="@{/login}" class="text-color3">Login</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- Error Alert -->
+                                <div th:if="${present}" class="alert alert-danger alert-dismissible fade show" role="alert"
+                                     th:text="${message}">
+                                </div>
+
+                                <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
+<script>
+    setTimeout(() => {
+      const alertBox = document.querySelector('.alert');
+      if (alertBox) {
+        alertBox.style.transition = "opacity 0.5s";
+        alertBox.style.opacity = "0";
+        setTimeout(() => alertBox.remove(), 500);
+      }
+    }, 3000); // 3 seconds
+</script>
+
+
+<style>
+    .error-border {
+        border: 2px solid red;
+    }
+    .valid-border {
+        border: 2px solid green;
+    }
+</style>
+
+<script>
+    const pwd = document.getElementById("password");
+const confirmPwd = document.getElementById("confirmPassword");
+
+
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+         if (pwd.value !== confirmPwd.value) {
+        e.preventDefault();
+        confirmPwd.classList.add("error-border");
+        confirmPwd.classList.remove("valid-border");
+        confirmPwd.setCustomValidity("Passwords do not match!");
+        confirmPwd.reportValidity();
+    } else {
+        confirmPwd.classList.remove("error-border");
+        confirmPwd.classList.add("valid-border");
+        confirmPwd.setCustomValidity(""); // clear error
+    }
+});
+
+    // Live validation while typing
+confirmPwd.addEventListener("input", function() {
+    if (pwd.value === confirmPwd.value) {
+        confirmPwd.classList.remove("error-border");
+        confirmPwd.classList.add("valid-border");
+        confirmPwd.setCustomValidity("");
+    } else {
+        confirmPwd.classList.add("error-border");
+        confirmPwd.classList.remove("valid-border");
+        confirmPwd.setCustomValidity("Passwords do not match!");
+    }
+});
+</script>
