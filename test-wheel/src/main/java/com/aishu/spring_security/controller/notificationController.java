@@ -13,8 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 public class notificationController {
+
+    private static final Logger log = LoggerFactory.getLogger(notificationController.class);
 
     @Autowired
     NotificationService notificationService;
@@ -31,7 +36,7 @@ public class notificationController {
     @MessageMapping("/sendMessage")
     @SendTo("/topic/notifications")
     public String sendMessage(String message){
-        System.out.println("message:"+message);
+        log.info("message: {}", message);
         return message;
     }
 

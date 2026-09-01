@@ -7,34 +7,29 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
+
 @Service
 public class JwtStoreService {
-
 
     @Autowired
     TokenRepository tokenRepository;
 
-
-    // Thread-safe map: username → JWT
-    private final Map<String, String> jwtMap = new ConcurrentHashMap<>();
-
     public void storeToken(String username, String token) {
-        jwtMap.put(username, token);
+        findstoreRefreshToken(username, token, LocalDateTime.now().plusHours(24));
     }
 
     public String getToken(String username) {
-        return jwtMap.get(username);
+        return findRefreshTokenByUser(username);
     }
 
     public void removeToken(String username) {
-        jwtMap.remove(username);
+        revokeAllTokensForUser(username);
     }
 
     public boolean hasToken(String username) {
-
-        return jwtMap.containsKey(username);
+        if (username == null) return false;
+        List<Token> tokens = tokenRepository.findByUsername(username);
+        return tokens.stream().anyMatch(t -> !t.isRevoked());
     }
 
     public void revokeToken(String tokenValue) {
@@ -43,6 +38,7 @@ public class JwtStoreService {
             tokenRepository.save(token);
         });
     }
+
     public void revokeAllTokensForUser(String username) {
         List<Token> tokens = tokenRepository.findByUsername(username);
         tokens.forEach(token -> {
@@ -50,7 +46,6 @@ public class JwtStoreService {
             tokenRepository.save(token);
         });
     }
-
 
     public String findRefreshTokenByUser(String userName) {
         if (userName == null) return null;
@@ -79,3 +74,4 @@ public class JwtStoreService {
         tokenRepository.save(token);
     }
 }
+

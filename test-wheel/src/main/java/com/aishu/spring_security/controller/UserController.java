@@ -61,20 +61,20 @@ public class UserController {
         try {
             if (userRepo.existsByUsername(user.getUsername())) {
                 redirectAttributes.addFlashAttribute("exist username", "Username already exists!");
-                System.out.println("User: " + user.getUsername() + " Already Present");
+                logger.warn("User: {} Already Present", user.getUsername());
                 redirectAttributes.addFlashAttribute("present", true);
                 redirectAttributes.addFlashAttribute("message", "User "+user.getUsername()+" already present");
                 return "redirect:/login";
             }
             if (userRepo.existsByPhone(user.getPhone())) {
-                System.out.println("User: " + user.getPhone() + " Already Present");
+                logger.warn("User phone: {} Already Present", user.getPhone());
                 redirectAttributes.addFlashAttribute("present", true);
                 redirectAttributes.addFlashAttribute("message", "User "+user.getPhone()+" already present");
                 return "redirect:/login";
             }
             // try saving user
             userService.saveUser(user);
-            System.out.println("User: " + user.getUsername() + " NotPresent So, Added");
+            logger.info("User: {} NotPresent So, Added", user.getUsername());
             // if save succeeds
             logger.info("new user created {}", user.getFirstName());
             //notificationService.addSignupNotification(user.getFirstName());

@@ -18,29 +18,41 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Service
 public class JwtService {
 
+    @Value("${jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
     private String secretKey;
 
     public JwtService() {
-        secretKey = generateSecretKey();
+    }
+
+    public JwtService(String secretKey) {
+        this.secretKey = secretKey;
     }
 
     public String generateSecretKey() {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey secretKey = keyGen.generateKey();
-            return Base64.getEncoder().encodeToString(secretKey.getEncoded());
+            SecretKey key = keyGen.generateKey();
+            return Base64.getEncoder().encodeToString(key.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error generating secret Key", e);
         }
     }
 
     private Key getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(secretKey);
+        } catch (Exception e) {
+            keyBytes = secretKey.getBytes();
+        }
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 
     // Generate legacy token (3 minutes)
     public String generateToken(String username) {

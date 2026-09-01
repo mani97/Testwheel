@@ -17,9 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 public class testListController {
 
+    private static final Logger log = LoggerFactory.getLogger(testListController.class);
 
     @Autowired
     UserRepo userRepo;
@@ -33,8 +37,7 @@ public class testListController {
         model.addAttribute("testEntity",new TestEntityDto());
         long testCount = testInterface.getTestCount();
         long userCount = userRepo.count();// built-in JPA count()
-        System.out.println(testCount);
-        System.out.println(userCount);
+        log.info("testCount: {}, userCount: {}", testCount, userCount);
 
 
 

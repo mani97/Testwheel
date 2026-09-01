@@ -1,17 +1,19 @@
 package com.aishu.spring_security.service;
 
-import com.aishu.spring_security.service.OtpService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class OtpServiceImpl implements OtpService {
 
-    private final Map<String, OtpEntry> otpStore = new HashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(OtpServiceImpl.class);
+    private final Map<String, OtpEntry> otpStore = new ConcurrentHashMap<>();
     private final Random random = new Random();
 
     @Override
@@ -44,7 +46,7 @@ public class OtpServiceImpl implements OtpService {
     }
 
     public void sendOtp(String phone, String otp) {
-        // Integrate with Twilio, AWS SNS, or other SMS provider
-        System.out.println("Sending OTP " + otp + " to phone " + phone);
+        log.info("Sending OTP {} to phone {}", otp, phone);
     }
 }
+

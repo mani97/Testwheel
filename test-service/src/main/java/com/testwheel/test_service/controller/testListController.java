@@ -15,12 +15,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 public class testListController {
 
-
-//    @Autowired
-//    UserClient userClient; // Feign client instead of UserRepo
+    private static final Logger log = LoggerFactory.getLogger(testListController.class);
 
     @Autowired
     TestRepository testRepository;
@@ -30,15 +31,9 @@ public class testListController {
         model.addAttribute("testEntity",new TestEntity());
         long testCount = testRepository.count();
 
-//        // Call User Service API instead of userRepo
-//        long userCount = userClient.getUserCount(); // call User Service
-
-        //long userCount = userRepo.count();// built-in JPA count()
-        System.out.println(testCount);
-        //System.out.println(userCount);
+        log.info("Test count: {}", testCount);
 
         model.addAttribute("testCount", testCount);
-        //model.addAttribute("userCount", userCount);
 
 
  return "project-list";

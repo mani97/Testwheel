@@ -1,13 +1,15 @@
-# Stage 1: Build with Maven + JDK 21
+# --- Stage 1: Build with Maven + JDK 21 ---
 FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Stage 2: Runtime with JDK 21
+# --- Stage 2: Runtime with JDK 21 ---
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
+# API Gateway runs on port 8765
 EXPOSE 8765
+
 ENTRYPOINT ["java","-jar","app.jar"]

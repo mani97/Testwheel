@@ -1,0 +1,28 @@
+# Target & Build directories
+target/
+**/target/
+*.jar
+*.war
+*.ear
+
+# IDE and Editor files
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+logs/
+
+# Local Environment & Secrets
+.env
+*.env.local

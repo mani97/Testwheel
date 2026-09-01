@@ -6,8 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepo userRepo;
@@ -17,7 +22,7 @@ public class UserService {
 
     public User saveUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
-        System.out.println("User:"+user.getPassword());
+        log.info("Encrypted password for user: {}", user.getUsername());
         return userRepo.save(user);
     }
     public void updatePassword(String phone, String newPassword) {
@@ -27,7 +32,7 @@ public class UserService {
         String encodedPassword = encoder.encode(newPassword);
 
         user.setPassword(encodedPassword);
-        user.setConfirmPassword(encodedPassword); // keep consistent
+        //user.setConfirmPassword(encodedPassword); // keep consistent
 
         userRepo.save(user);
     }

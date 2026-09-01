@@ -22,6 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -45,8 +48,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http //.csrf(AbstractHttpConfigurer::disable)   // disable CSRF
-
+        http
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(
                                         "/favicon.png","/welcome","/testwheel", "/login", "/signup","/verify-otp",
@@ -54,7 +56,6 @@ public class SecurityConfig {
                                         "/images/**","/fontawesome/**","/fonts/**","/timeout","/timeout",
                                         "/","/perform_login","/saveWizard","/favicon.png","/createtest-2").permitAll()
                                 .anyRequest().authenticated()
-                        // .permitAll()
                 )
                 // Form login
                 .formLogin(form -> form
@@ -87,8 +88,11 @@ public class SecurityConfig {
                         .invalidSessionUrl("/timeout")
                         .maximumSessions(1) // restrict concurrent logins per user
                         .expiredUrl("/timeout"))
-                .csrf(Customizer.withDefaults()); //      Enable CSRF protection
-                //.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                        .ignoringRequestMatchers("/perform_login", "/perform_logout", "/saveWizard", "/api/**", "/images/**", "/assets/**")
+                );
 
         return http.build();
     }
