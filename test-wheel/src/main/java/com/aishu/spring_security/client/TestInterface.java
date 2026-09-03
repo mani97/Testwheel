@@ -17,7 +17,7 @@ public interface TestInterface {
 //    ApkUploadDto uploadApk(@RequestPart("file") MultipartFile apkFile,
 //                           @RequestParam("testId") int testId);
 
-    @GetMapping("testrequest/count")
+    @GetMapping("/testrequest/count")
     long getTestCount();
 
 }

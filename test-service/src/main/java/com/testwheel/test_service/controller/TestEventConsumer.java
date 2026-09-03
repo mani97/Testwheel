@@ -67,15 +67,14 @@ public class TestEventConsumer {
     // --- ApkUpload Consumer ---
     @CircuitBreaker(name = "apkServiceCB", fallbackMethod = "fallbackApkUploaded")
     @Retry(name = "apkServiceCB")
-    @Bulkhead(name = "apkServiceCB", type = Bulkhead.Type.THREADPOOL)
+    @Bulkhead(name = "apkServiceCB", type = Bulkhead.Type.SEMAPHORE)
     @RateLimiter(name = "apkServiceCB")
     @KafkaListener(
             topics = "apk-uploaded-topic",
             groupId = "test-service-group",
             containerFactory = "apkUploadKafkaListenerContainerFactory"
     )
-    public CompletableFuture<Void> handleApkUploaded(ApkUploadDto dto) {
-        return CompletableFuture.runAsync(() -> {
+    public void handleApkUploaded(ApkUploadDto dto) {
         log.info("Consumed ApkUploadDto: {}", dto);
 
         ApkUpload apkUpload = new ApkUpload();
@@ -85,14 +84,10 @@ public class TestEventConsumer {
         apkUpload.setTestEntityId(dto.getTestEntityId());
 
         apkRepo.save(apkUpload);
-    });
     }
 
-    public CompletableFuture<Void> fallbackApkUploaded(ApkUploadDto dto, Throwable t) {
-        return CompletableFuture.runAsync(() -> {
-            log.error("Circuit breaker triggered for ApkUploadDto: {}, Error: {}", dto, t.getMessage());
-            // Optionally route to Dead Letter Queue or log for retry
-        });
+    public void fallbackApkUploaded(ApkUploadDto dto, Throwable t) {
+        log.error("Circuit breaker triggered for ApkUploadDto: {}, Error: {}", dto, t.getMessage());
     }
 
 }

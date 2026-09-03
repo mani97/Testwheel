@@ -107,65 +107,87 @@
         </div>
       </div>
 
-
-
-      <!-- authenticated user details -->
-
+      <!-- Dropdown menu -->
       <div class="dropdown">
+        <!-- Avatar trigger -->
+        <div class="profile-avatar cursor-pointer" data-bs-toggle="dropdown">
+          <!-- Show profile picture if available -->
+          <img th:if="${currentUser != null and currentUser.picture != null}"
+               th:src="${currentUser.picture}" alt="Profile Picture"
+               class="rounded-circle border border-2 border-light shadow-sm"
+               style="width:40px;height:40px;object-fit:cover;"/>
 
-        <!-- Only show login success alert -->
-
-
-        <!-- <img src="assets/images/profile-img.svg" class="rounded-circle cursor-pointer" > -->
-        <div class="profile-avatar" data-bs-toggle="dropdown">
-          <span th:text="${firstLetter}"></span>
+          <!-- Fallback: show first letter -->
+          <span th:if="${currentUser == null or currentUser.picture == null}"
+                th:text="${currentUser != null ? currentUser.firstLetter : '?'}"
+                class="rounded-circle border border-2 border-light bg-secondary text-white d-inline-flex align-items-center justify-content-center shadow-sm"
+                style="width:40px;height:40px;font-weight:600;"></span>
         </div>
+
+
+
+        <!-- Dropdown menu -->
         <div class="dropdown-menu dropdown-menu-end w-320 pb-0 custom-dropdown">
           <div class="d-flex brdr-btm-1 p-3">
             <div class="col-auto">
               <div class="profile-avatar">
-                <span th:text="${firstLetter}"></span>
+                <!-- Profile picture or fallback initial -->
+                <img th:if="${currentUser != null and currentUser.picture != null}"
+                     th:src="${currentUser.picture}" alt="Profile Picture"
+                     class="rounded-circle border border-2 border-light shadow-sm"
+                     style="width:40px;height:40px;"/>
+                <span th:if="${currentUser == null or currentUser.picture == null}"
+                      th:text="${currentUser != null ? currentUser.firstLetter : '?'}"
+                      class="rounded-circle border border-2 border-light bg-secondary text-white d-inline-flex align-items-center justify-content-center shadow-sm"
+                      style="width:40px;height:40px;"></span>
               </div>
             </div>
             <div class="col-11">
+              <!-- Show name or fallback -->
+              <p class="para-f4 dmsans-semibold px-3 text-color1"
+                 th:text="${currentUser != null ? currentUser.name : 'Guest'}"></p>
 
-              <p class="para-f4 dmsans-semibold px-3 text-color1" sec:authentication="name">u</p>
-              <p sec:authorize="isAuthenticated()"></p>
-              <!--                <p sec:authorize="isAnonymous()"></p>-->
-              <p class="para-f4 px-3 text-color6" th:text="${currentUser.firstName}"></p>
-              <span th:text="${firstName}"></span>
+              <!-- Show email or fallback -->
+              <p class="para-f4 px-3 text-color6"
+                 th:text="${currentUser != null ? currentUser.email : 'No Email'}"></p>
             </div>
           </div>
-          <ul>
-            <li class="pb-2 mt-3 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img
-                    th:src="@{/assets/images/profile-icon.svg}" alt="View Profile" class="pe-3" />View Profile</a></li>
-            <li class="py-2 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img
-                    th:src="@{/assets/images/setting-icon.svg}" alt="Account Settings" class="pe-3" />Account
-              Settings</a></li>
-            <li class="py-2 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img
-                    th:src="@{/assets/images/billing-icon.svg}" alt="Billing & Plans" class="pe-3" />Billing & Plans</a>
-            </li>
-            <li class="py-2 mb-3 px-2"><a class="dropdown-item dmsans-semibold text-color1" href="#"><img
-                    th:src="@{/assets/images/help-support-icon.svg}" alt="Help & Support" class="pe-3" />Help &
-              Support</a>
-            </li>
 
+          <!-- Menu items -->
+          <ul>
+            <li class="pb-2 mt-3 px-2">
+              <a class="dropdown-item dmsans-semibold text-color1" href="#">
+                <img th:src="@{/assets/images/profile-icon.svg}" alt="View Profile" class="pe-3"/>View Profile
+              </a>
+            </li>
+            <li class="py-2 px-2">
+              <a class="dropdown-item dmsans-semibold text-color1" href="#">
+                <img th:src="@{/assets/images/setting-icon.svg}" alt="Account Settings" class="pe-3"/>Account Settings
+              </a>
+            </li>
+            <li class="py-2 px-2">
+              <a class="dropdown-item dmsans-semibold text-color1" href="#">
+                <img th:src="@{/assets/images/billing-icon.svg}" alt="Billing & Plans" class="pe-3"/>Billing & Plans
+              </a>
+            </li>
+            <li class="py-2 mb-3 px-2">
+              <a class="dropdown-item dmsans-semibold text-color1" href="#">
+                <img th:src="@{/assets/images/help-support-icon.svg}" alt="Help & Support" class="pe-3"/>Help & Support
+              </a>
+            </li>
             <li class="brdr-top-1 py-3 px-2">
               <form th:action="@{/logout}" method="post" style="display:inline;">
                 <button type="submit" class="dropdown-item text-color8 dmsans-semibold">
-                  <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3" />
-                  Sign Out
+                  <img th:src="@{/assets/images/logout-icon.svg}" alt="Sign Out" class="pe-3"/>Sign Out
                 </button>
               </form>
             </li>
-
-
-
-
-
           </ul>
         </div>
       </div>
+
+
+
     </div>
   </div>
 

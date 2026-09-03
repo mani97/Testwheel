@@ -26,23 +26,8 @@ public class testListController {
     @Autowired
     TestRepository testRepository;
 
-    @GetMapping("/testlist")
-    public String TestList(Model model) {
-        model.addAttribute("testEntity",new TestEntity());
-        long testCount = testRepository.count();
-
-        log.info("Test count: {}", testCount);
-
-        model.addAttribute("testCount", testCount);
-
-
- return "project-list";
-    }
-    @GetMapping("testrequest/count")
+    @GetMapping("/testrequest/count")
     public long getTestRequestCount() {
         return testRepository.count();
     }
-
-
-
 }

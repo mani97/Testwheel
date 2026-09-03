@@ -40,6 +40,21 @@ public class GatewayRoutesConfig {
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("testServiceCB", URI.create("forward:/fallback/test")))
                 .build();
     }
+
+
+
+    @Bean
+    public RouterFunction<ServerResponse> oauth2Routes() {
+        return GatewayRouterFunctions.route("oauth2-routes")
+                // initial authorization request
+                .route(RequestPredicates.path("/oauth2/**"), HandlerFunctions.http())
+                // callback after provider login
+                .route(RequestPredicates.path("/login/oauth2/**"), HandlerFunctions.http())
+                .filter(LoadBalancerFilterFunctions.lb("SPRING-SECURITY"))
+                .build();
+    }
+
+
     private RouterFunction<ServerResponse> buildDirectRoutes(String id, List<String> paths, String serviceId) {
         RouterFunctions.Builder builder = GatewayRouterFunctions.route(id);
         for (String path : paths) {
@@ -55,10 +70,10 @@ public class GatewayRoutesConfig {
                 List.of(
                         "/dashboard", "/login", "/perform_login", "/signup",
                         "/projects", "/createproject","/saveproject", "/alltest", "/testlist",
-                        "/logout", "/perform_logout", "/verify-otp", "/forgot-password-phone",
+                        "/testrequest", "/logout", "/perform_logout", "/verify-otp", "/forgot-password-phone",
                         "/reset-password", "/welcome", "/testwheel", "/createtest2","/createtest",
                         "/timeout", "/csrf-token", "/saveWizard", "/whoami",
-                        "/user", "/notifications"
+                        "/user", "/notifications","/oauth2/**", "/login/oauth2/**"
                 ),
                 "SPRING-SECURITY"
         );

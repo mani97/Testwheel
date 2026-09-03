@@ -9,6 +9,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="service-registry" />
       </profile>
+      <profile name="Annotation profile for project-root" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="test-service" />
+        <module name="test-service (3)" />
+        <module name="api_gateway" />
+        <module name="test-service (4)" />
+      </profile>
       <profile name="Annotation profile for Test-wheel" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -18,28 +30,30 @@
         </processorPath>
         <module name="Test-wheel" />
       </profile>
-      <profile name="Annotation profile for project-root" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="test-service" />
-        <module name="api_gateway" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="api-gateway" target="21" />
+      <module name="service-registry (1)" target="21" />
+      <module name="service-registry (2)" target="21" />
+      <module name="service-registry (3)" target="21" />
+      <module name="test-service (1)" target="1.8" />
+      <module name="test-service (2)" target="21" />
+      <module name="test-service (3)" target="1.8" />
+      <module name="test-service (4)" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Test-wheel" options="-parameters" />
-      <module name="api-gateway" options="-parameters" />
       <module name="api_gateway" options="-parameters" />
       <module name="service-registry" options="-parameters" />
+      <module name="service-registry (1)" options="-parameters" />
+      <module name="service-registry (2)" options="-parameters" />
+      <module name="service-registry (3)" options="-parameters" />
       <module name="test-service" options="-parameters" />
+      <module name="test-service (1)" options="-parameters" />
+      <module name="test-service (2)" options="-parameters" />
+      <module name="test-service (3)" options="-parameters" />
+      <module name="test-service (4)" options="-parameters" />
     </option>
   </component>
 </project>

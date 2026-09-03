@@ -34,29 +34,34 @@ public class testListController {
 
     @GetMapping("/testlist")
     public String TestList(Model model) {
-        model.addAttribute("testEntity",new TestEntityDto());
-        long testCount = testInterface.getTestCount();
-        long userCount = userRepo.count();// built-in JPA count()
+        model.addAttribute("testEntity", new TestEntityDto());
+        long testCount = 0;
+        try {
+            testCount = testInterface.getTestCount();
+        } catch (Exception e) {
+            log.error("Failed to fetch test count from test-service: {}", e.getMessage());
+        }
+        long userCount = userRepo.count();
         log.info("testCount: {}, userCount: {}", testCount, userCount);
-
-
-
 
         model.addAttribute("testCount", testCount);
         model.addAttribute("userCount", userCount);
 
-
- return "project-list";
+        return "project-list";
     }
 
-//    @GetMapping("/testrequest/count")
-//    @ResponseBody
-//    public Map<String, Long> getTestRequestCount() {
-//        Map<String, Long> counts = new HashMap<>();
-//        counts.put("users", userRepo.count());
-//        counts.put("tests", testInterface.getTestCount());
-//        return counts;
-//    }
-
-
+    @GetMapping("/testrequest/count")
+    @ResponseBody
+    public Map<String, Long> getTestRequestCount() {
+        Map<String, Long> counts = new HashMap<>();
+        long testCount = 0;
+        try {
+            testCount = testInterface.getTestCount();
+        } catch (Exception e) {
+            log.error("Failed to fetch test count from test-service: {}", e.getMessage());
+        }
+        counts.put("users", userRepo.count());
+        counts.put("tests", testCount);
+        return counts;
+    }
 }

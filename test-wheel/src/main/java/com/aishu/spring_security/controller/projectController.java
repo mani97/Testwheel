@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 
+import com.aishu.spring_security.Dto.UserDTO;
+
 @Controller
 public class projectController {
 
@@ -33,11 +35,16 @@ public class projectController {
     }
 
     @PostMapping("/saveproject")
-    public String saveProject(@ModelAttribute("project") Project project, Model model, RedirectAttributes redirectAttributes,Authentication authentication,@ModelAttribute("currentUser") User currentUser) {
+    public String saveProject(@ModelAttribute("project") Project project, Model model, RedirectAttributes redirectAttributes, Authentication authentication, @ModelAttribute("currentUser") UserDTO currentUser) {
 
-            // Inject global model attribute into entity
-            project.setCreatedBy(currentUser.getFirstName());
-            project.setUsername(currentUser.getUsername());
+        // Inject global model attribute into entity
+        if (currentUser != null) {
+            project.setCreatedBy(currentUser.getName() != null ? currentUser.getName() : "Anonymous");
+            project.setUsername(currentUser.getEmail() != null ? currentUser.getEmail() : "Anonymous");
+        } else {
+            project.setCreatedBy("Anonymous");
+            project.setUsername("Anonymous");
+        }
 
         Project saved = projectRepo.save(project); // persist entity
         redirectAttributes.addFlashAttribute("successMessage", "Project saved successfully!");

@@ -3,49 +3,51 @@ version: "3.9"
 services:
   service-registry:
     build: ./service-registry
+    image: TestWheel/service-registry:${SERVICE_REGISTRY_VERSION}
+    env_file:
+      - .env
     ports:
       - "${SERVICE_REGISTRY_PORT:-28761}:8761"
     environment:
       SPRING_APPLICATION_NAME: service-registry
-      SERVER_PORT: 8761
-      EUREKA_INSTANCE_HOSTNAME: ${EUREKA_HOST:-service-registry}
+      SERVER_PORT: ${EUREKA_PORT}
+      EUREKA_INSTANCE_HOSTNAME: ${EUREKA_HOST}
       EUREKA_CLIENT_FETCH_REGISTRY: "false"
       EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/eureka/apps" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   api-gateway:
     build: ./api-gateway
+    image: TestWheel/api-gateway:${API_GATEWAY_VERSION}
+    env_file:
+      - .env
     ports:
-      - "${API_GATEWAY_HOST_PORT:-28765}:8765"
+      - "${API_GATEWAY_HOST_PORT:-28765}:${API_GATEWAY_PORT}"
     environment:
       SPRING_APPLICATION_NAME: api-gateway
-      SERVER_PORT: 8765
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://service-registry:8761/eureka/}
-      SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_ENABLED: "true"
-      SPRING_CLOUD_GATEWAY_DISCOVERY_LOCATOR_LOWER_CASE_SERVICE_ID: "true"
-    depends_on:
-      service-registry:
-        condition: service_healthy
+      SERVER_PORT: ${API_GATEWAY_PORT}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
 
   test-wheel:
     build: ./test-wheel
+    image: TestWheel/test-wheel:${TEST_WHEEL_VERSION}
+    env_file:
+      - .env
     ports:
-      - "${TEST_WHEEL_HOST_PORT:-9098}:9098"
+      - "${TEST_WHEEL_HOST_PORT:-29098}:${TEST_WHEEL_PORT}"
     environment:
       SPRING_APPLICATION_NAME: spring-security
-      SERVER_PORT: 9098
-      SERVER_TOMCAT_USE_RELATIVE_REDIRECTS: "true"
-      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/internapp}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-1234}
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://service-registry:8761/eureka/}
+      SERVER_PORT: ${TEST_WHEEL_PORT}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      OAUTH2_REDIRECT_BASE_URL: ${OAUTH2_REDIRECT_BASE_URL:-http://localhost:28765}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
-      JWT_SECRET: ${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
     depends_on:
       service-registry:
         condition: service_healthy
@@ -56,46 +58,48 @@ services:
 
   test-service:
     build: ./test-service
+    image: TestWheel/test-service:${TEST_SERVICE_VERSION}
+    env_file:
+      - .env
     ports:
-      - "${TEST_SERVICE_HOST_PORT:-9097}:9097"
+      - "${TEST_SERVICE_HOST_PORT:-29097}:${TEST_SERVICE_PORT}"
     environment:
       SPRING_APPLICATION_NAME: test-service
-      SERVER_PORT: 9097
-      SERVER_TOMCAT_USE_RELATIVE_REDIRECTS: "true"
-      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
-      SPRING_DATASOURCE_URL: ${TEST_SERVICE_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/testservice}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-1234}
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://service-registry:8761/eureka/}
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
+      SERVER_PORT: ${TEST_SERVICE_PORT}
+      SPRING_DATASOURCE_URL: ${TEST_SERVICE_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
-      service-registry:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
+        service-registry:
+          condition: service_healthy
+        postgres:
+          condition: service_healthy
+        kafka:
+          condition: service_started
 
   postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-internapp}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+    image: postgres:${POSTGRES_VERSION}
+    env_file:
+      - .env
     ports:
-      - "${POSTGRES_HOST_PORT:-55432}:5432"
+      - "${POSTGRES_HOST_PORT:-55432}:${POSTGRES_PORT}"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-internapp}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-internapp}" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:${ZOOKEEPER_VERSION}
+    env_file:
+      - .env
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     healthcheck:
@@ -105,9 +109,11 @@ services:
       retries: 5
 
   kafka:
-    image: confluentinc/cp-kafka:7.5.0
+    image: confluentinc/cp-kafka:${KAFKA_VERSION}
     depends_on:
       - zookeeper
+    env_file:
+      - .env
     ports:
       - "${KAFKA_HOST_PORT:-29092}:9092"
     environment:
@@ -117,17 +123,24 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: [ "CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
 
   pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
+    image: dpage/pgadmin4:${PGADMIN_VERSION}
+    env_file:
+      - .env
     ports:
       - "${PGADMIN_HOST_PORT:-8081}:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     depends_on:
       - postgres
+
 volumes:
   postgres-data:
-

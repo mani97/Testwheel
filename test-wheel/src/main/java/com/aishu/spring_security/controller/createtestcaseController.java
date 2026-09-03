@@ -15,8 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 public class createtestcaseController {
+
+    private static final Logger log = LoggerFactory.getLogger(createtestcaseController.class);
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
@@ -31,8 +36,13 @@ public class createtestcaseController {
     public String createTest(@ModelAttribute TestEntityDto testEntityDto,
                              @RequestParam(value="apk", required=false) MultipartFile apkFile) {
 
+        log.info("Received createTest request: testName={}, websiteUrl={}, apkFile={}",
+                testEntityDto.getTestName(), testEntityDto.getWebsiteUrl(),
+                apkFile != null ? apkFile.getOriginalFilename() : "none");
+
         // Publish TestCreatedEvent
-        kafkaTemplate.send("test-created-topic",testEntityDto);
+        kafkaTemplate.send("test-created-topic", testEntityDto);
+        log.info("Sent TestCreatedEvent to Kafka topic 'test-created-topic': {}", testEntityDto);
 
         // Publish ApkUploadedEvent if file exists
         if (apkFile != null && !apkFile.isEmpty()) {
@@ -43,6 +53,7 @@ public class createtestcaseController {
             dto.setUploadedAt(LocalDateTime.now());
 
             kafkaTemplate.send("apk-uploaded-topic", dto);
+            log.info("Sent ApkUploadedEvent to Kafka topic 'apk-uploaded-topic': {}", dto);
         }
 
         return "redirect:/alltest";
