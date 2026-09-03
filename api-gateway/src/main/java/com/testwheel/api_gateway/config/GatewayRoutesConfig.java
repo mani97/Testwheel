@@ -54,9 +54,9 @@ public class GatewayRoutesConfig {
                 "app-direct-routes",
                 List.of(
                         "/dashboard", "/login", "/perform_login", "/signup",
-                        "/projects", "/createproject", "/alltest", "/testlist",
+                        "/projects", "/createproject","/saveproject", "/alltest", "/testlist",
                         "/logout", "/perform_logout", "/verify-otp", "/forgot-password-phone",
-                        "/reset-password", "/welcome", "/testwheel", "/createtest2",
+                        "/reset-password", "/welcome", "/testwheel", "/createtest2","/createtest",
                         "/timeout", "/csrf-token", "/saveWizard", "/whoami",
                         "/user", "/notifications"
                 ),
